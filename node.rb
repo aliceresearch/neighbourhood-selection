@@ -23,6 +23,12 @@ class Node
     relevant_neighbourhood = select_relevant_neighbourhood_from possible_nodes
   end
 
+  def step2 benefits_and_costs
+    benefits_and_costs.each { |i, values| 
+      puts "node_id #{i} benefits_and_costs #{values.inspect}"
+    }
+  end
+
   def print_taus
     @taus.each { |i,t|
       puts "node_id #{i} tau #{t}" 
