@@ -8,13 +8,14 @@ e = Node.new(5)
 me = Node.new(0)
 
 possible_nodes = Set.new [ a, b, d, e ]
-me.step1(possible_nodes)
-me.print_taus
+puts me.step1(possible_nodes).inspect
+# me.print_taus
 
-possible_nodes.add c
-me.step1(possible_nodes)
-me.print_taus
+# possible_nodes.add c
+# me.step1(possible_nodes)
+# me.print_taus
 
-possible_nodes.delete a
-me.step1(possible_nodes)
-me.print_taus
+# possible_nodes.delete a
+# me.step1(possible_nodes)
+# me.print_taus
+
