@@ -28,7 +28,6 @@ class Node
 
   def step2 benefits_and_costs
     benefits_and_costs.each { |i, values| 
-      puts "node_id #{i} benefits_and_costs #{values.inspect}"
       @taus[i]= (1-@evaporation_rate) * @taus[i]
       if (utility values) > 0 
         @taus[i] = @taus[i] + @delta
@@ -39,7 +38,7 @@ class Node
   def utility values
     @weights[:beta] * values[:beta] - @weights[:gamma] * values[:gamma]
   end
-
+  
   def print_taus
     @taus.each { |i,t|
       puts "node_id #{i} tau #{t}" 

@@ -5,4 +5,10 @@ s = Simulator.new
 #   puts i.node_id
 # }
 
-s.step
+# 100.times {
+  # s.step
+# }
+
+10.times {
+  puts s.benefit_generator 0.5, 1, 1
+}
