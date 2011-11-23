@@ -14,10 +14,10 @@ class Simulator
     @node_parameters = 
       { 0 => {
         1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 1, :alpha => 1, :theta => 0.5 } }, 
+        2 => { :p => 0.5, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 0.1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 0.1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 0.1, :alpha => 1, :theta => 0.5 } }, 
        
       1 => {
         0 => { :p => 1, :alpha => 1, :theta => 0.5 },
@@ -90,7 +90,7 @@ class Simulator
   
   def gamma_generator alpha, theta
     #TODO: Add gamma random number generator
-    alpha-theta
+    2
   end
 
   def step 
@@ -101,11 +101,15 @@ class Simulator
       neighbourhood.each { |neighbour| 
         benefits_and_costs[neighbour.node_id] = 
           get_benefits_and_costs node.node_id, neighbour.node_id
-        
-        
       }
+      
+      # if node.node_id == 0
+      #   puts benefits_and_costs.inspect
+      # end
+      
       node.step2 benefits_and_costs
     }
+    
     @nodes.find { |n| n.node_id==0 }.print_taus
   end
 

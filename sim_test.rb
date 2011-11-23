@@ -5,7 +5,7 @@ s = Simulator.new
 #   puts i.node_id
 # }
 
-100.times {
+10.times {
   s.step
 }
 
