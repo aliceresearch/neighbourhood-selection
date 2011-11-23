@@ -7,7 +7,7 @@ class Node
   def initialize id
     @taus = {}
     @node_id = id
-    @evaporation_rate = 0.1
+    @evaporation_rate = 0.01
     @delta = 1
     @weights = { :beta => 0.5, :gamma => 0.5 }
   end
@@ -41,7 +41,8 @@ class Node
   
   def print_taus
     @taus.each { |i,t|
-      puts "node_id #{i} tau #{t}" 
+      # puts "node_id #{i} tau #{t}" 
+      puts t
     }
   end
   

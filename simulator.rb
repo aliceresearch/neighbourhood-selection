@@ -5,10 +5,59 @@ class Simulator
   
   attr_reader :nodes
   
+  
   def initialize numnodes = 6
     @nodes = Set.new
     populateNodes numnodes
     @random = Random.new 1337
+    
+    @node_parameters = 
+      { 0 => {
+        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 1, :alpha => 1, :theta => 0.5 } }, 
+       
+      1 => {
+        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        
+      2 => {
+        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        
+      3 => {
+        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+    
+    
+      4 => {
+        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+    
+    
+      5 => {
+        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
+        4 => { :p => 1, :alpha => 1, :theta => 0.5 } } }
+    
+    
+    
   end
   
   def populateNodes n
@@ -17,6 +66,15 @@ class Simulator
     }
     
   end
+  
+  def get_benefits_and_costs a, b
+    p = @node_parameters[a][b][:p]
+    alpha = @node_parameters[a][b][:alpha]
+    theta = @node_parameters[a][b][:theta]
+    
+    { :beta => (benefit_generator p, alpha, theta), :gamma => 1 }
+  end
+  
   
   def benefit_generator p, alpha, theta
     (bernoulli_generator p) * (gamma_generator alpha, theta)
@@ -31,7 +89,8 @@ class Simulator
   end
   
   def gamma_generator alpha, theta
-    1
+    #TODO: Add gamma random number generator
+    alpha-theta
   end
 
   def step 
@@ -40,7 +99,10 @@ class Simulator
 
       benefits_and_costs = { }
       neighbourhood.each { |neighbour| 
-        benefits_and_costs[neighbour.node_id] = { :beta => 1, :gamma => 1 }
+        benefits_and_costs[neighbour.node_id] = 
+          get_benefits_and_costs node.node_id, neighbour.node_id
+        
+        
       }
       node.step2 benefits_and_costs
     }
