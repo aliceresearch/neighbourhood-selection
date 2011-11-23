@@ -10,8 +10,10 @@ class Node
     @evaporation_rate = 0.01
     @delta = 1
     @weights = { :beta => 0.5, :gamma => 0.5 }
-    @communication_strategy = :smooth
+    @communication_strategy = :step
     @random = Random.new @node_id
+    @step_epsilon = 0.99
+    @step_eta = 0.01
   end
   
   def step1 possible_nodes
@@ -28,9 +30,13 @@ class Node
     relevant_neighbourhood = select_relevant_neighbourhood_from possible_nodes
   end
 
-  def step2 benefits_and_costs
+  def step2 benefits_and_costs, possible_nodes
+    possible_nodes.each { |n| 
+      @taus[n.node_id]= (1-@evaporation_rate) * @taus[n.node_id]      
+    }
+    
+    
     benefits_and_costs.each { |i, values| 
-      @taus[i]= (1-@evaporation_rate) * @taus[i]
       if (utility values) > 0
         @taus[i] = @taus[i] + @delta
       end
@@ -77,7 +83,27 @@ class Node
   end
   
   def select_step_from possible_nodes
-    possible_nodes
+    selected_nodes = Set.new
+    possible_nodes.each {|n|
+      # p = (1 + @taus[n.node_id])/max_tau
+      if @taus[n.node_id] > @step_epsilon
+        selected_nodes.add n
+      else      
+        if @random.rand < @step_eta
+          selected_nodes.add n
+        end
+      end
+    }
+    
+    if @node_id == 0
+      puts "------------"
+      selected_nodes.each { |n|
+        puts n.node_id
+      }
+    end
+    
+    selected_nodes
+
   end
 
 end

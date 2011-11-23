@@ -107,7 +107,7 @@ class Simulator
       #   puts benefits_and_costs.inspect
       # end
       
-      node.step2 benefits_and_costs
+      node.step2 benefits_and_costs, @nodes.find_all { |n| n.node_id != node.node_id}
     }
     
     @nodes.find { |n| n.node_id==0 }.print_taus
