@@ -10,6 +10,7 @@ class Simulator
     @nodes = Set.new
     populateNodes numnodes
     @random = Random.new 1337
+    @gamma = Gamma.new @random
 
     @node_parameters =
       { 0 => {
@@ -77,7 +78,7 @@ class Simulator
 
 
   def benefit_generator p, alpha, theta
-    (bernoulli_generator p) * (gamma_generator alpha, theta)
+    (bernoulli_generator p) * (@gamma.gamma_variate alpha, theta)
   end
 
   def bernoulli_generator p
@@ -88,10 +89,6 @@ class Simulator
     end
   end
 
-  def gamma_generator alpha, theta
-    #TODO: Add gamma random number generator
-    2
-  end
 
   def step
     @nodes.each { |node|
