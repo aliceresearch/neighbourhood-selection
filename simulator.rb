@@ -1,5 +1,6 @@
 require "set"
 require "./node"
+require "./gamma"
 
 class Simulator
 
