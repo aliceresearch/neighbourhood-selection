@@ -6,7 +6,13 @@ class Simulator
 
   attr_reader :nodes
 
-
+  # Create a new Simulator object and associated requirements. At present this
+  # creates a new set of nodes (6 by default; this can be overridden by passing
+  # in the number of nodes to create).
+  #
+  # TODO: Make this read in the simulation configuration from a file, especially
+  # node_parameters.
+  #
   def initialize numnodes = 6
     @nodes = Set.new
     populateNodes numnodes
@@ -116,24 +122,38 @@ class Simulator
   end
 
 
+  # Run one discrete time step of the simulation.
+  # This iterates through each node, running their step1 and step2 methods.
+  # Typically, this means they set their relevant neighbourhood based on
+  # previous knowledge (e.g. tau values), communicate and sample benefits and
+  # costs. They then update their tau values accordingly.
+  #
   def step
-    @nodes.each { |node|
+    @nodes.each do |node|
+
+      # Step 1 asks the node for its chosen relevant neighbourhood, which it is
+      # responsible for determining based on its prior knowledge (e.g. tau
+      # values).
+      #
+      # In order to do this, we give the node the set of possible nodes it
+      # could communicate with and receive back a subset of these.
       neighbourhood = node.step1 @nodes.find_all { |n| n.node_id != node.node_id}
 
+      # Next we determine the benefit and cost associated with each edge in the
+      # relevant neighbourhood of the node.
       benefits_and_costs = { }
-      neighbourhood.each { |neighbour|
+      neighbourhood.each do |neighbour|
         benefits_and_costs[neighbour.node_id] =
           get_benefits_and_costs node.node_id, neighbour.node_id
-      }
+      end
 
-      # if node.node_id == 0
-      #   puts benefits_and_costs.inspect
-      # end
-
+      # In step 2, we tell the node what the benefits and costs were, so that it
+      # can update its knowledge (e.g. tau values).
       node.step2 benefits_and_costs, @nodes.find_all { |n| n.node_id != node.node_id}
-    }
 
     @nodes.find { |n| n.node_id==0 }.print_taus
+    end
+
   end
 
 end
