@@ -10,11 +10,19 @@ class Node
     @evaporation_rate = 0.01
     @delta = 1
     @weights = { :beta => 0.5, :gamma => 0.5 }
-    @communication_strategy = :step
     @random = Random.new @node_id
-    @step_epsilon = 0.99
+
+    # Choose one of these three:
+    #@communication_strategy = :broadcast
+    #@communication_strategy = :smooth
+    @communication_strategy = :step
+
+    # Communication strategy parameters:
+    @step_epsilon = 0.95
     @step_eta = 0.01
+
   end
+
 
   def step1 possible_nodes
     @taus.keep_if { |i, t|
@@ -47,16 +55,23 @@ class Node
     @weights[:beta] * values[:beta] - @weights[:gamma] * values[:gamma]
   end
 
+  # Print the node ID and the current values in @taus.
+  # Formatting is suitable for Gnuplot, Octave or similar.
+  # E.g.
+  # 0 0.97 0.86 0.51 0.01 0.05
+  #
   def print_taus
+    print @node_id
     @taus.each { |i,t|
       # puts "node_id #{i} tau #{t}"
-      puts t
+      print " #{t}"
     }
+    puts
   end
 
   def select_relevant_neighbourhood_from possible_nodes
     case @communication_strategy
-      when :broadcast then possible_nodes
+      when :broadcast then select_all_from possible_nodes
       when :smooth then select_smooth_from possible_nodes
       when :step then select_step_from possible_nodes
     end
@@ -72,11 +87,9 @@ class Node
       end
     }
 
-    if @node_id == 0
-      puts "------------"
-      selected_nodes.each { |n|
-        puts n.node_id
-      }
+    # Bit of debugging output
+    if DEBUG and @node_id == 0
+      print_selected_nodes 0, selected_nodes
     end
 
     selected_nodes
@@ -95,15 +108,38 @@ class Node
       end
     }
 
-    if @node_id == 0
-      puts "------------"
-      selected_nodes.each { |n|
-        puts n.node_id
-      }
+    # Bit of debugging output
+    if Simulator::DEBUG and @node_id == 0
+      print_selected_nodes 0, selected_nodes
     end
 
     selected_nodes
 
   end
+
+  def select_all_from possible_nodes
+    selected_nodes = Set.new possible_nodes
+
+    # Bit of debugging output
+    if DEBUG and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
+
+    selected_nodes
+
+  end
+
+  def print_selected_nodes id, selected_nodes
+
+    if @node_id == 0
+      print "Node #{id} selected:"
+      selected_nodes.each { |n|
+        print " #{n.node_id}"
+      }
+      puts
+    end
+
+  end
+
 
 end

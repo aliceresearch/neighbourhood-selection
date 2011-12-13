@@ -3,12 +3,14 @@ require "./simulator"
 s = Simulator.new
 
 # Some initial output
-puts "Beginning simulation with #{s.nodes.length} nodes."
-print "Node IDs are:"
-s.nodes.each { |i|
-  print " #{i.node_id}"
-}
-puts "."
+if Simulator::DEBUG
+  puts "Beginning simulation with #{s.nodes.length} nodes."
+  print "Node IDs are:"
+  s.nodes.each { |i|
+    print " #{i.node_id}"
+  }
+  puts "."
+end
 
 # Run a number of simulation steps.
 # Simulator.step can take a block. If one is passed in, then this is executed at

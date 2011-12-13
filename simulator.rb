@@ -6,6 +6,8 @@ class Simulator
 
   attr_reader :nodes
 
+  DEBUG = false
+
   # Create a new Simulator object and associated requirements. At present this
   # creates a new set of nodes (6 by default; this can be overridden by passing
   # in the number of nodes to create).
