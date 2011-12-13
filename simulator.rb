@@ -61,6 +61,8 @@ class Simulator
 
   end
 
+  # Populate the @nodes object with n new nodes, indexed incrementally from 0.
+  #
   def populateNodes n
     n.times { |i|
       @nodes.add Node.new i
@@ -68,19 +70,42 @@ class Simulator
 
   end
 
+
+  # Produce and return a sampled benefit and cost from the edge a -> b.
+  # The benefit and cost are determined by the implementation of
+  # benefit_generator.
+  #
   def get_benefits_and_costs a, b
+
+    # The parameters for this edge:
     p = @node_parameters[a][b][:p]
     alpha = @node_parameters[a][b][:alpha]
     theta = @node_parameters[a][b][:theta]
 
-    { :beta => (benefit_generator p, alpha, theta), :gamma => 1 }
+    # The attribute hash to return:
+    { :beta => (benefit_generator p, alpha, theta), :gamma => cost_generator }
   end
 
 
+  # This method is called internally by get_benefits_and_costs. It calls the
+  # constituent randomised components.
+  # In this case, they are a Bernoulli and gamma process, with parameters for
+  # each edge as specified in @node_parameters.
+  #
   def benefit_generator p, alpha, theta
     (bernoulli_generator p) * (@gamma.gamma_variate alpha, theta)
   end
 
+  # This method is called internally by get_benefits_and_costs. At present it
+  # returns 1, since we assume that costs are constant.
+  def cost_generator
+    1
+  end
+
+  # A simple Bernoulli generator. Returns 1 with probability p, 0 otherwise.
+  #
+  # TODO: Separate this out into a library.
+  #
   def bernoulli_generator p
     if @random.rand < p
       1
