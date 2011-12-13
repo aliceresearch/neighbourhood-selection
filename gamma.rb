@@ -3,8 +3,13 @@ class Gamma
   LOG4 = Math.log(4.0)
   SG_MAGICCONST = 1.0 + Math.log(4.5)
 
-  def initialize
-    @random = Random.new 1337
+  # Creates a new Gamma random number generating object.
+  # By default, it will create a random number generator for its own use.
+  # If you prefer, you can pass in a random number generator
+  # (i.e. an object of type Random) and it will use that instead.
+  #
+  def initialize(random = (Random.new 1337))
+      @random = random
 
   end
 
@@ -42,7 +47,8 @@ class Gamma
       bbb = alpha - LOG4
       ccc = alpha + ainv
 
-      while 1 u1 = @random.rand
+      while 1
+        u1 = @random.rand
 
         if not ((1e-7 < u1) and (u1 < 0.9999999))
           continue
