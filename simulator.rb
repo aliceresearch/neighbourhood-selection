@@ -151,8 +151,13 @@ class Simulator
       # can update its knowledge (e.g. tau values).
       node.step2 benefits_and_costs, @nodes.find_all { |n| n.node_id != node.node_id}
 
-    @nodes.find { |n| n.node_id==0 }.print_taus
     end
+
+    # Finally, we yield to a block which may have been passed in to the step
+    # method. This can be used for printing out or otherwise collecting
+    # information about the state of the simulation at the end of the time
+    # step.
+    yield
 
   end
 
