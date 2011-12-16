@@ -3,6 +3,7 @@ require "set"
 class Node
 
   attr_reader :node_id
+  attr_reader :taus
 
   def initialize id
     @taus = {}
@@ -60,13 +61,13 @@ class Node
   # E.g.
   # 0 0.97 0.86 0.51 0.01 0.05
   #
-  def print_taus
-    print @node_id
+  def print_taus taus_file
+    taus_file.print @node_id
     @taus.each { |i,t|
       # puts "node_id #{i} tau #{t}"
-      print " #{t}"
+      taus_file.print " #{t}"
     }
-    puts
+    taus_file.puts
   end
 
   def select_relevant_neighbourhood_from possible_nodes
