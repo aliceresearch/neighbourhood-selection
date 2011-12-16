@@ -61,7 +61,9 @@ class Node
   # E.g.
   # 0 0.97 0.86 0.51 0.01 0.05
   #
-  def print_taus taus_file
+  # Optionally, specify a file object to print to as a parameter.
+  #
+  def print_taus taus_file=STDOUT
     taus_file.print @node_id
     @taus.each { |i,t|
       # puts "node_id #{i} tau #{t}"
