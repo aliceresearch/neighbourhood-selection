@@ -23,48 +23,48 @@ class Simulator
 
     @node_parameters =
       { 0 => {
-        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 0.5, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 0.1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 0.1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 0.1, :alpha => 1, :theta => 0.5 } },
+        1 => { :p => 1, :alpha => 1, :theta => 2 },
+        2 => { :p => 0.5, :alpha => 1, :theta => 2 },
+        3 => { :p => 0.1, :alpha => 1, :theta => 2 },
+        4 => { :p => 0.1, :alpha => 1, :theta => 2 },
+        5 => { :p => 0.1, :alpha => 1, :theta => 2 } },
 
       1 => {
-        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        0 => { :p => 1, :alpha => 1, :theta => 2 },
+        2 => { :p => 1, :alpha => 1, :theta => 2 },
+        3 => { :p => 1, :alpha => 1, :theta => 2 },
+        4 => { :p => 1, :alpha => 1, :theta => 2 },
+        5 => { :p => 1, :alpha => 1, :theta => 2 } },
 
       2 => {
-        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        0 => { :p => 1, :alpha => 1, :theta => 2 },
+        1 => { :p => 1, :alpha => 1, :theta => 2 },
+        3 => { :p => 1, :alpha => 1, :theta => 2 },
+        4 => { :p => 1, :alpha => 1, :theta => 2 },
+        5 => { :p => 1, :alpha => 1, :theta => 2 } },
 
       3 => {
-        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        0 => { :p => 1, :alpha => 1, :theta => 2 },
+        1 => { :p => 1, :alpha => 1, :theta => 2 },
+        2 => { :p => 1, :alpha => 1, :theta => 2 },
+        4 => { :p => 1, :alpha => 1, :theta => 2 },
+        5 => { :p => 1, :alpha => 1, :theta => 2 } },
 
 
       4 => {
-        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        5 => { :p => 1, :alpha => 1, :theta => 0.5 } },
+        0 => { :p => 1, :alpha => 1, :theta => 2 },
+        1 => { :p => 1, :alpha => 1, :theta => 2 },
+        2 => { :p => 1, :alpha => 1, :theta => 2 },
+        3 => { :p => 1, :alpha => 1, :theta => 2 },
+        5 => { :p => 1, :alpha => 1, :theta => 2 } },
 
 
       5 => {
-        0 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        1 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        2 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        3 => { :p => 1, :alpha => 1, :theta => 0.5 },
-        4 => { :p => 1, :alpha => 1, :theta => 0.5 } } }
+        0 => { :p => 1, :alpha => 1, :theta => 2 },
+        1 => { :p => 1, :alpha => 1, :theta => 2 },
+        2 => { :p => 1, :alpha => 1, :theta => 2 },
+        3 => { :p => 1, :alpha => 1, :theta => 2 },
+        4 => { :p => 1, :alpha => 1, :theta => 2 } } }
 
 
 
