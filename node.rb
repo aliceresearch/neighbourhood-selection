@@ -17,6 +17,8 @@ class Node
     @initial_tau = 1.0
     @evaporation_rate = 0.01
     @delta = 1
+
+    # Utility parameters
     @weights = { :beta => 0.5, :gamma => 0.5 }
 
     # Choose one of these three:

@@ -133,12 +133,11 @@ class Simulator
   def step
     @nodes.each do |node|
 
-      # Step 1 asks the node for its chosen relevant neighbourhood, which it is
-      # responsible for determining based on its prior knowledge (e.g. tau
+      # Step 1 tells the node what its current set of possible nodes are, and
+      # asks the node for its chosen relevant neighbourhood. It is
+      # responsible for determining this based on its prior knowledge (e.g. tau
       # values).
       #
-      # In order to do this, we give the node the set of possible nodes it
-      # could communicate with and receive back a subset of these.
       neighbourhood = node.step1 @nodes.find_all { |n| n.node_id != node.node_id}
 
       # Next we determine the benefit and cost associated with each edge in the
