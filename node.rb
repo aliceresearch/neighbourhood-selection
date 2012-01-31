@@ -200,7 +200,7 @@ class Node
     selected_nodes = Set.new @possible_nodes
 
     # Bit of debugging output
-    if DEBUG and @node_id == 0
+    if Simulator::DEBUG and @node_id == 0
       print_selected_nodes 0, selected_nodes
     end
 
