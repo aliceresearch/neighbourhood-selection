@@ -150,8 +150,8 @@ class Simulator
       end
 
       # In step 2, we tell the node what the benefits and costs were, so that it
-      # can update its knowledge (e.g. tau values).
-      node.step2 benefits_and_costs, @nodes.find_all { |n| n.node_id != node.node_id}
+      # can update its knowledge of each node (e.g. tau values).
+      node.step2 benefits_and_costs
 
     end
 

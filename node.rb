@@ -6,12 +6,18 @@ class Node
   attr_reader :taus
 
   def initialize id
+    @possible_nodes = {}
     @taus = {}
+    @last_node_utilities = {}
+    @total_node_utilities = {}
     @node_id = id
+    @random = Random.new @node_id
+
+    # Pheromone parameters
+    @initial_tau = 1.0
     @evaporation_rate = 0.01
     @delta = 1
     @weights = { :beta => 0.5, :gamma => 0.5 }
-    @random = Random.new @node_id
 
     # Choose one of these three:
     #@communication_strategy = :broadcast
@@ -19,32 +25,62 @@ class Node
     @communication_strategy = :step
 
     # Communication strategy parameters:
+    #@step_epsilon = 0.95
+    #@step_eta = 0.01
+
     @step_epsilon = 0.95
     @step_eta = 0.01
 
   end
 
 
-  def step1 possible_nodes
+  def step1 new_possible_nodes
+    update_possible_nodes new_possible_nodes
+
     @taus.keep_if { |i, t|
-      possible_nodes.find { |n| n.node_id == i }
+      @possible_nodes.find { |n| n.node_id == i }
     }
 
-    possible_nodes.each { |b|
+    @possible_nodes.each { |b|
       if !@taus[b.node_id]
-        @taus[b.node_id] = 1.0
+        @taus[b.node_id] = @initial_tau
       end
     }
 
-    relevant_neighbourhood = select_relevant_neighbourhood_from possible_nodes
+    relevant_neighbourhood = select_relevant_neighbourhood
   end
 
-  def step2 benefits_and_costs, possible_nodes
-    possible_nodes.each { |n|
+  # Update the node's knowledge of its possible nodes.
+  def update_possible_nodes new_possible_nodes
+    @possible_nodes = new_possible_nodes
+  end
+
+
+  # In this step, we update our knowledge, based on the benefits and costs
+  # derived.
+  def step2 benefits_and_costs
+
+    # Update this iteration's and total utility for each possible node
+    @possible_nodes.each do |n|
+      if benefits_and_costs[n.node_id] then
+        @last_node_utilities[n.node_id] = utility benefits_and_costs[n.node_id]
+        if @total_node_utilities[n.node_id]
+          @total_node_utilities[n.node_id] += utility benefits_and_costs[n.node_id]
+        else
+          @total_node_utilities[n.node_id] = utility benefits_and_costs[n.node_id]
+        end
+      else
+        @last_node_utilities[n.node_id] = 0
+      end
+    end
+
+
+    # Evaporate all tau values
+    @possible_nodes.each { |n|
       @taus[n.node_id]= (1-@evaporation_rate) * @taus[n.node_id]
     }
 
-
+    # Update the tau values based on the observed benefits and costs
     benefits_and_costs.each { |i, values|
       if (utility values) > 0
         @taus[i] = @taus[i] + @delta
@@ -56,34 +92,72 @@ class Node
     @weights[:beta] * values[:beta] - @weights[:gamma] * values[:gamma]
   end
 
+
   # Print the node ID and the current values in @taus.
   # Formatting is suitable for Gnuplot, Octave or similar.
   # E.g.
   # 0 0.97 0.86 0.51 0.01 0.05
   #
-  # Optionally, specify a file object to print to as a parameter.
+  # Optionally, specify a file object to print to as a parameter. If none is
+  # given, output goes to STDOUT.
   #
-  def print_taus taus_file=STDOUT
-    taus_file.print @node_id
+  def print_taus destination=STDOUT
+    destination.print @node_id
     @taus.each { |i,t|
       # puts "node_id #{i} tau #{t}"
-      taus_file.print " #{t}"
+      destination.print " #{t}"
     }
-    taus_file.puts
+    destination.puts
   end
 
-  def select_relevant_neighbourhood_from possible_nodes
+  # Print the node ID and the current utility obtained from each possible node.
+  # Formatting is suitable for Gnuplot, Octave or similar.
+  # E.g.
+  # 0 0.97 0.86 0.51 0.01 0.05
+  #
+  # Optionally, specify a file object to print to as a parameter. If none is
+  # given, output goes to STDOUT.
+  #
+  def print_total_utilities destination=STDOUT
+    destination.print @node_id
+    @total_node_utilities.each { |i,u|
+      # puts "node_id #{i} tau #{u}"
+      destination.print " #{u}"
+    }
+    destination.puts
+  end
+
+  # Return the total cumulative conjoint utility so far accumulated by this
+  # node.
+  def cumulative_conjoint_utility
+    # @total_node_utilities is a hash with the key being the node_id and the
+    # value being the associated utility value. So, we just need to sum the
+    # values.
+    @total_node_utilities.values.inject(:+)
+  end
+
+  # Print the total cumulative conjoint utility so far accumulated by this node.
+  # The value is put(sed) on its own line.
+  #
+  # Optionally, specify a file object to print to as a parameter. If none is
+  # given, output goes to STDOUT.
+  #
+  def print_cumulative_conjoint_utility destination=STDOUT
+    destination.puts cumulative_conjoint_utility
+  end
+
+  def select_relevant_neighbourhood
     case @communication_strategy
-      when :broadcast then select_all_from possible_nodes
-      when :smooth then select_smooth_from possible_nodes
-      when :step then select_step_from possible_nodes
+      when :broadcast then select_all
+      when :smooth then select_smooth
+      when :step then select_step
     end
   end
 
-  def select_smooth_from possible_nodes
+  def select_smooth
     selected_nodes = Set.new
     max_tau = @taus.values.max
-    possible_nodes.each {|n|
+    @possible_nodes.each {|n|
       p = (1 + @taus[n.node_id])/max_tau
       if @random.rand < p
         selected_nodes.add n
@@ -91,16 +165,16 @@ class Node
     }
 
     # Bit of debugging output
-    if DEBUG and @node_id == 0
+    if Simulator::DEBUG and @node_id == 0
       print_selected_nodes 0, selected_nodes
     end
 
     selected_nodes
   end
 
-  def select_step_from possible_nodes
+  def select_step
     selected_nodes = Set.new
-    possible_nodes.each {|n|
+    @possible_nodes.each {|n|
       # p = (1 + @taus[n.node_id])/max_tau
       if @taus[n.node_id] > @step_epsilon
         selected_nodes.add n
@@ -120,8 +194,8 @@ class Node
 
   end
 
-  def select_all_from possible_nodes
-    selected_nodes = Set.new possible_nodes
+  def select_all
+    selected_nodes = Set.new @possible_nodes
 
     # Bit of debugging output
     if DEBUG and @node_id == 0
