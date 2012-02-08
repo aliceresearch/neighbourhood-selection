@@ -5,13 +5,13 @@ node_utilities_file = File.open("sim.node_utilities", 'w')
 conjoint_utilities_file = File.open("sim.conjoint_utilities", 'w')
 
 
-s = Simulator.new "Test"
+sim = Simulator.new "Test"
 
 # Some initial output
-if Simulator::DEBUG
-  puts "Beginning simulation with #{s.nodes.length} nodes."
+if sim.debug?
+  puts "Beginning simulation with #{sim.nodes.length} nodes."
   print "Node IDs are:"
-  s.nodes.each { |i|
+  sim.nodes.each { |i|
     print " #{i.node_id}"
   }
   puts "."
@@ -21,12 +21,12 @@ end
 # Simulator.step can take a block. If one is passed in, then this is executed at
 # the end of each time step.
 10000.times do
-  s.step do
+  sim.step do
     # This block is executed at the end of each time step. It can be used for
     # collecting data and printing it out, for example.
 
     # We're only really interested in tracking one node, node 0
-    interesting_node = s.nodes.find { |n| n.node_id==0 }
+    interesting_node = sim.nodes.find { |n| n.node_id==0 }
 
     # Print out the utility and tau associated with each possible node.
     interesting_node.print_taus taus_file

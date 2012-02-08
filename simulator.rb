@@ -8,7 +8,7 @@ class Simulator
 
   attr_reader :nodes
 
-  DEBUG = false
+  @debug = false
 
   # Create a new Simulator object and associated requirements. At present this
   # creates a new set of nodes (6 by default; this can be overridden by passing
@@ -25,6 +25,9 @@ class Simulator
     # YAML files are parsed with keys as Strings rather than symbols, which we
     # use internally. So, convert the Strings to symbols.
     @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
+
+    # Should we print debugging output?
+    @debug = @CONFIG[:debug]
 
     @nodes = Set.new
 
@@ -58,9 +61,10 @@ class Simulator
     end
 
 
-    puts "NODE PARAMS FROM CONFIG:"
-    p @node_parameters
-    puts "END"
+    if debug?
+      puts "Node parameters read from configuration file:"
+      p @node_parameters
+    end
 
 
     # Then fill in the gaps with default values. This ensures that we don't have
@@ -84,10 +88,11 @@ class Simulator
 
     end
 
-    puts
-    puts "FINAL NODE PARAMS:"
-    p @node_parameters
-    puts "END"
+    if debug?
+      puts
+      puts "Node parameters after filling gaps with any defaults."
+      p @node_parameters
+    end
 
   end
 
@@ -97,7 +102,7 @@ class Simulator
   #
   def createNodes n=@CONFIG[:numnodes]
     n.times { |i|
-      @nodes.add Node.new i
+      @nodes.add Node.new i, debug?
     }
 
   end
@@ -183,6 +188,10 @@ class Simulator
     # step.
     yield
 
+  end
+
+  def debug?
+    @debug
   end
 
 end

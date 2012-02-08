@@ -5,13 +5,18 @@ class Node
   attr_reader :node_id
   attr_reader :taus
 
-  def initialize id
+  # Should this node output debugging info?
+  @debug = false
+  attr_reader :debug
+
+  def initialize id, debug=false
     @possible_nodes = {}
     @taus = {}
     @last_node_utilities = {}
     @total_node_utilities = {}
     @node_id = id
     @random = Random.new @node_id
+    @debug = debug
 
     # Pheromone parameters
     @initial_tau = 1.0
@@ -167,7 +172,7 @@ class Node
     }
 
     # Bit of debugging output
-    if Simulator::DEBUG and @node_id == 0
+    if debug? and @node_id == 0
       print_selected_nodes 0, selected_nodes
     end
 
@@ -188,7 +193,7 @@ class Node
     }
 
     # Bit of debugging output
-    if Simulator::DEBUG and @node_id == 0
+    if debug? and @node_id == 0
       print_selected_nodes 0, selected_nodes
     end
 
@@ -200,7 +205,7 @@ class Node
     selected_nodes = Set.new @possible_nodes
 
     # Bit of debugging output
-    if Simulator::DEBUG and @node_id == 0
+    if debug? and @node_id == 0
       print_selected_nodes 0, selected_nodes
     end
 
@@ -218,6 +223,11 @@ class Node
       puts
     end
 
+  end
+
+  # Should this node output debugging info?
+  def debug?
+    @debug
   end
 
 
