@@ -1,4 +1,6 @@
 require "set"
+require "yaml"
+require "./util"
 require "./node"
 require "./gamma"
 
@@ -15,64 +17,85 @@ class Simulator
   # TODO: Make this read in the simulation configuration from a file, especially
   # node_parameters.
   #
-  def initialize numnodes = 6
+  def initialize sim_name
+
+    # Load simulation scenario specific configuration
+    @CONFIG = YAML.load_file("./config/simulation.yml")[sim_name]
+
+    # YAML files are parsed with keys as Strings rather than symbols, which we
+    # use internally. So, convert the Strings to symbols.
+    @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
+
     @nodes = Set.new
-    populateNodes numnodes
+
+    # Create the nodes themselves
+    createNodes
+
+    # Create the environment for the nodes, e.g. the network structure.
+    createEnvironment
+
     @random = Random.new 1337
     @gamma = Gamma.new @random
 
-    @node_parameters =
-      { 0 => {
-        1 => { :p => 1, :alpha => 1, :theta => 2 },
-        2 => { :p => 0.5, :alpha => 1, :theta => 2 },
-        3 => { :p => 0.1, :alpha => 1, :theta => 2 },
-        4 => { :p => 0.1, :alpha => 1, :theta => 2 },
-        5 => { :p => 0.1, :alpha => 1, :theta => 2 } },
+  end
 
-      1 => {
-        0 => { :p => 1, :alpha => 1, :theta => 2 },
-        2 => { :p => 1, :alpha => 1, :theta => 2 },
-        3 => { :p => 1, :alpha => 1, :theta => 2 },
-        4 => { :p => 1, :alpha => 1, :theta => 2 },
-        5 => { :p => 1, :alpha => 1, :theta => 2 } },
+  # Create elements of the environment. 
+  #
+  # An example of this is the values on edges in the network. This method will
+  # fill in values not present with default values. If you want this to work,
+  # the nodes to fill in for must already have been created (typically by
+  # calling createNodes) first.
+  #
+  def createEnvironment
 
-      2 => {
-        0 => { :p => 1, :alpha => 1, :theta => 2 },
-        1 => { :p => 1, :alpha => 1, :theta => 2 },
-        3 => { :p => 1, :alpha => 1, :theta => 2 },
-        4 => { :p => 1, :alpha => 1, :theta => 2 },
-        5 => { :p => 1, :alpha => 1, :theta => 2 } },
+    # First read in as much information as we have available in the
+    # configuration. 
 
-      3 => {
-        0 => { :p => 1, :alpha => 1, :theta => 2 },
-        1 => { :p => 1, :alpha => 1, :theta => 2 },
-        2 => { :p => 1, :alpha => 1, :theta => 2 },
-        4 => { :p => 1, :alpha => 1, :theta => 2 },
-        5 => { :p => 1, :alpha => 1, :theta => 2 } },
+    if @CONFIG[:node_parameters]
+      @node_parameters = @CONFIG[:node_parameters]
+    else
+      @node_parameters = {}
+    end
 
 
-      4 => {
-        0 => { :p => 1, :alpha => 1, :theta => 2 },
-        1 => { :p => 1, :alpha => 1, :theta => 2 },
-        2 => { :p => 1, :alpha => 1, :theta => 2 },
-        3 => { :p => 1, :alpha => 1, :theta => 2 },
-        5 => { :p => 1, :alpha => 1, :theta => 2 } },
+    puts "NODE PARAMS FROM CONFIG:"
+    p @node_parameters
+    puts "END"
 
 
-      5 => {
-        0 => { :p => 1, :alpha => 1, :theta => 2 },
-        1 => { :p => 1, :alpha => 1, :theta => 2 },
-        2 => { :p => 1, :alpha => 1, :theta => 2 },
-        3 => { :p => 1, :alpha => 1, :theta => 2 },
-        4 => { :p => 1, :alpha => 1, :theta => 2 } } }
+    # Then fill in the gaps with default values. This ensures that we don't have
+    # to specify a full configuration if we're not interested in parts of it.
 
+    @nodes.each do |source|
+      # First ensure there's a record for this node as a source
+      unless @node_parameters[source.node_id]
+        @node_parameters[source.node_id] = {}
+      end
 
+      # Then ensure each record is fully populated - don't create links to
+      # oneself though.
+      @nodes.each do |dest|
+        unless dest.node_id == source.node_id
+          unless @node_parameters[source.node_id][dest.node_id]
+            @node_parameters[source.node_id][dest.node_id] = { :p =>1, :alpha =>1, :theta => 2 }
+          end
+        end
+      end
+
+    end
+
+    puts
+    puts "FINAL NODE PARAMS:"
+    p @node_parameters
+    puts "END"
 
   end
 
   # Populate the @nodes object with n new nodes, indexed incrementally from 0.
+  # If n is omitted, the value of 'numnodes' in the scenario configuration is
+  # used instead.
   #
-  def populateNodes n
+  def createNodes n=@CONFIG[:numnodes]
     n.times { |i|
       @nodes.add Node.new i
     }

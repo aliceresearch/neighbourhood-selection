@@ -5,7 +5,7 @@ node_utilities_file = File.open("sim.node_utilities", 'w')
 conjoint_utilities_file = File.open("sim.conjoint_utilities", 'w')
 
 
-s = Simulator.new
+s = Simulator.new "Test"
 
 # Some initial output
 if Simulator::DEBUG
