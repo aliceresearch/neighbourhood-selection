@@ -14,9 +14,6 @@ class Simulator
   # creates a new set of nodes (6 by default; this can be overridden by passing
   # in the number of nodes to create).
   #
-  # TODO: Make this read in the simulation configuration from a file, especially
-  # node_parameters.
-  #
   def initialize sim_name
 
     # Load simulation scenario specific configuration
@@ -29,9 +26,10 @@ class Simulator
     # Should we print debugging output?
     @debug = @CONFIG[:debug]
 
+    # Store the nodes in a set rather than an array or anything else.
     @nodes = Set.new
 
-    # Create the nodes themselves
+    # Create the nodes themselves.
     createNodes
 
     # Create the environment for the nodes, e.g. the network structure.
