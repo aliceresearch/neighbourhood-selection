@@ -1,8 +1,8 @@
 require "set"
 require "yaml"
-require "./util"
-require "./node"
-require "./gamma"
+require "neighbourhood-selection/util"
+require "neighbourhood-selection/node"
+require "neighbourhood-selection/gamma"
 
 class Simulator
 
@@ -18,6 +18,10 @@ class Simulator
 
     # Load simulation scenario specific configuration
     @CONFIG = YAML.load_file("./config/simulation.yml")[sim_name]
+
+    unless @CONFIG
+      raise "No configuration found for simulation #{sim_name}."
+    end
 
     # YAML files are parsed with keys as Strings rather than symbols, which we
     # use internally. So, convert the Strings to symbols.
@@ -40,7 +44,7 @@ class Simulator
 
   end
 
-  # Create elements of the environment. 
+  # Create elements of the environment.
   #
   # An example of this is the values on edges in the network. This method will
   # fill in values not present with default values. If you want this to work,
@@ -50,7 +54,7 @@ class Simulator
   def createEnvironment
 
     # First read in as much information as we have available in the
-    # configuration. 
+    # configuration.
 
     if @CONFIG[:node_parameters]
       @node_parameters = @CONFIG[:node_parameters]

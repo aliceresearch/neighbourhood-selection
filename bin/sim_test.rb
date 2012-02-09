@@ -1,4 +1,4 @@
-require "./simulator"
+require "neighbourhood-selection"
 
 taus_file = File.open("sim.taus", 'w')
 node_utilities_file = File.open("sim.node_utilities", 'w')
