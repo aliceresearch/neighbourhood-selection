@@ -1,11 +1,13 @@
 require "neighbourhood-selection"
 
-taus_file = File.open("sim.taus", 'w')
-node_utilities_file = File.open("sim.node_utilities", 'w')
-conjoint_utilities_file = File.open("sim.conjoint_utilities", 'w')
+SIM_NAME="smooth"
+
+taus_file = File.open("#{SIM_NAME}.taus", 'w')
+node_utilities_file = File.open("#{SIM_NAME}.node_utilities", 'w')
+conjoint_utilities_file = File.open("#{SIM_NAME}.conjoint_utilities", 'w')
 
 
-sim = Simulator.new "Test"
+sim = Simulator.new SIM_NAME
 
 # Some initial output
 if sim.debug?
