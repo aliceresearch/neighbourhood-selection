@@ -165,6 +165,9 @@ class Node
       when :broadcast then select_all
       when :smooth then select_smooth
       when :step then select_step
+      else
+        warn "Warning: Node #{@node_id} using undefined neighbourhood selection algorithm. This will result in it selecting no nodes."
+        Set.new
     end
   end
 
