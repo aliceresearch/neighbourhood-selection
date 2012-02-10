@@ -27,6 +27,9 @@ class Simulator
     # use internally. So, convert the Strings to symbols.
     @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
 
+    # We also need to process some string values into symbols.
+    @CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@CONFIG[:node_strategies]) 
+
     # Should we print debugging output?
     @debug = @CONFIG[:debug]
 
@@ -102,9 +105,18 @@ class Simulator
   # If n is omitted, the value of 'numnodes' in the scenario configuration is
   # used instead.
   #
-  def createNodes n=@CONFIG[:numnodes]
+  def createNodes n=@CONFIG[:numnodes], strategies=@CONFIG[:node_strategies]
     n.times { |i|
-      @nodes.add Node.new i, debug?
+
+      # Determine node communication strategy
+      if strategies[i]
+        strategy = strategies[i]
+      else
+        strategy = :broadcast
+      end
+
+      # Add the node
+      @nodes.add Node.new i, strategy, debug?
     }
 
   end

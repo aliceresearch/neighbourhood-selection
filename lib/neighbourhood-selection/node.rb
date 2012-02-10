@@ -9,7 +9,7 @@ class Node
   @debug = false
   attr_reader :debug
 
-  def initialize id, debug=false
+  def initialize id, communication_strategy, debug=false
     @possible_nodes = {}
     @taus = {}
     @last_node_utilities = {}
@@ -29,7 +29,8 @@ class Node
     # Choose one of these three:
     #@communication_strategy = :broadcast
     #@communication_strategy = :smooth
-    @communication_strategy = :step
+    #@communication_strategy = :step
+    @communication_strategy = communication_strategy
 
     # Communication strategy parameters:
     #@step_epsilon = 0.95
