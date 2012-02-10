@@ -1,4 +1,4 @@
-smooth:
+test:
   numnodes: 6
 
   node_parameters:
@@ -8,5 +8,20 @@ smooth:
       3: { p: 0.1, alpha: 1, theta: 2 }
       4: { p: 0.1, alpha: 1, theta: 2 }
       5: { p: 0.1, alpha: 1, theta: 2 }
+
+  debug: false
+
+
+broadcast:
+  numnodes: 3
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+
+  node_strategies:
+    0: broadcast
+  filename_suffix: -broadcast
 
   debug: false
