@@ -25,3 +25,34 @@ broadcast:
   filename_suffix: -broadcast
 
   debug: false
+
+
+smooth:
+  numnodes: 3
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 1, alpha: 1, theta: 0.8 } # node C
+
+  node_strategies:
+    0: smooth
+  filename_suffix: -smooth
+
+  debug: false
+
+
+step:
+  numnodes: 4
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      3: { p: 1, alpha: 1, theta: 1.8 } # node E
+
+  node_strategies:
+    0: step
+  filename_suffix: -step
+
+  debug: false
