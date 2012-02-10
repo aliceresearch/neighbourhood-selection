@@ -33,6 +33,16 @@ class Simulator
     # Should we print debugging output?
     @debug = @CONFIG[:debug]
 
+    # Set this simulation's name. This tells us we have initialized it.
+    @sim_name = sim_name
+
+    # What filename stub should be used?
+    if @CONFIG[:filename_suffix]
+      @filename = @sim_name + @CONFIG[:filename_suffix]
+    else
+      @filename = @sim_name 
+    end
+
     # Store the nodes in a set rather than an array or anything else.
     @nodes = Set.new
 
@@ -207,6 +217,56 @@ class Simulator
 
   def debug?
     @debug
+  end
+
+
+  def run
+
+    unless @sim_name
+      raise "Tried to run a simulation which has not yet been initialized."
+    end
+
+    # Set up output files
+    taus_file = File.open("#{@filename}.taus", 'w')
+    node_utilities_file = File.open("#{@filename}.node_utilities", 'w')
+    conjoint_utilities_file = File.open("#{@filename}.conjoint_utilities", 'w')
+
+
+    # Some initial output
+    if debug?
+      puts "Beginning simulation with #{@nodes.length} nodes."
+      print "Node IDs are:"
+      @nodes.each { |i|
+        print " #{i.node_id}"
+      }
+      puts "."
+    end
+
+    # Run a number of simulation steps.
+    # Simulator.step can take a block. If one is passed in, then this is
+    # executed at the end of each time step.
+    #
+    10000.times do
+      step do
+        # This block is executed at the end of each time step. It can be used for
+        # collecting data and printing it out, for example.
+
+        # We're only really interested in tracking one node, node 0
+        interesting_node = @nodes.find { |n| n.node_id==0 }
+
+        # Print out the utility and tau associated with each possible node.
+        interesting_node.print_taus taus_file
+        interesting_node.print_total_utilities node_utilities_file
+
+        # Just print the cumulative conjoint utility so far
+        interesting_node.print_cumulative_conjoint_utility conjoint_utilities_file
+      end
+    end
+
+    # Close the files
+    taus_file.close
+    node_utilities_file.close
+    conjoint_utilities_file.close
   end
 
 end
