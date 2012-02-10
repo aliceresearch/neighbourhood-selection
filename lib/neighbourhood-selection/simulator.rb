@@ -67,7 +67,7 @@ class Simulator
 
 
     if debug?
-      puts "Node parameters read from configuration file:"
+      puts "Network parameters read from configuration file:"
       p @node_parameters
     end
 
@@ -95,8 +95,9 @@ class Simulator
 
     if debug?
       puts
-      puts "Node parameters after filling gaps with any defaults."
+      puts "Network parameters after filling gaps with any defaults."
       p @node_parameters
+      puts
     end
 
   end

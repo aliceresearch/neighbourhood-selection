@@ -39,6 +39,12 @@ class Node
     @step_epsilon = 0.95
     @step_eta = 0.01
 
+    if debug?
+      print "Node #{@node_id} created: "
+      p self
+      puts
+    end
+
   end
 
 
