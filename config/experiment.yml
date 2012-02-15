@@ -1,0 +1,6 @@
+experiment1:
+  sim_name: test
+  filename_prefix: experiment1
+  num_experiments: 10
+  debug: false
+

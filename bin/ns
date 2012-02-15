@@ -25,24 +25,24 @@ command :run do |c|
 
     # Set this to be the maintainer to pull packages for.
     if args[0]
-      sim_name = args[0]
+      experiment_name = args[0]
     else
-      warn "You must specify a simulation name."
+      warn "You must specify an experiment name."
       exit
     end
 
     # If we've been passed a --config <filename>, then use that instead of
-    # 'config/simulation.yml'
+    # 'config/experiment.yml'
     #
     # Create the simulation itself:
     if options.file
-      sim = Simulator.new sim_name, options.file
+      experiment = Experiment.new experiment_name, options.file
     else
-      sim = Simulator.new sim_name
+      experiment = Experiment.new experiment_name
     end
 
-    # Run the simulation using the config given.
-    sim.run
+    # Run the experiment using the config given.
+    experiment.run
 
   end
 end

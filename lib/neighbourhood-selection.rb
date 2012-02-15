@@ -1,1 +1,1 @@
-require 'neighbourhood-selection/simulator'
+require 'neighbourhood-selection/experiment'

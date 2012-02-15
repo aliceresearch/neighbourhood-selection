@@ -12,10 +12,10 @@ class Simulator
 
   # Create a new Simulator object and associated requirements.
   #
-  def initialize sim_name
+  def initialize sim_name, sim_id, config_file, output_file_prefix, random_seed
 
     # Load simulation scenario specific configuration
-    @CONFIG = YAML.load_file("./config/simulation.yml")[sim_name]
+    @CONFIG = YAML.load_file(config_file)[sim_name]
 
     unless @CONFIG
       raise "No configuration found for simulation #{sim_name}."
@@ -26,19 +26,20 @@ class Simulator
     @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
 
     # We also need to process some string values into symbols.
-    @CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@CONFIG[:node_strategies]) 
+    @CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@CONFIG[:node_strategies])
 
     # Should we print debugging output?
     @debug = @CONFIG[:debug]
 
-    # Set this simulation's name. This tells us we have initialized it.
+    # Set this simulation's name and ID. This tells us we have initialized it.
     @sim_name = sim_name
+    @sim_id = sim_id
 
     # What filename stub should be used?
     if @CONFIG[:filename_suffix]
-      @filename = @sim_name + @CONFIG[:filename_suffix]
+      @filename = output_file_prefix + "-" + @sim_name + "-" + @CONFIG[:filename_suffix]
     else
-      @filename = @sim_name
+      @filename = output_file_prefix + "-" + @sim_name
     end
 
     # Store the nodes in a set rather than an array or anything else.
@@ -50,7 +51,7 @@ class Simulator
     # Create the environment for the nodes, e.g. the network structure.
     createEnvironment
 
-    @random = Random.new 1337
+    @random = Random.new random_seed
     @gamma = Gamma.new @random
 
   end
@@ -118,7 +119,7 @@ class Simulator
     n.times { |i|
 
       # Determine node communication strategy
-      if strategies[i]
+      if strategies and strategies[i]
         strategy = strategies[i]
       else
         strategy = :broadcast
@@ -224,11 +225,17 @@ class Simulator
       raise "Tried to run a simulation which has not yet been initialized."
     end
 
-    # Set up output files
-    taus_file = File.open("#{@filename}.taus", 'w')
-    node_utilities_file = File.open("#{@filename}.node_utilities", 'w')
-    conjoint_utilities_file = File.open("#{@filename}.conjoint_utilities", 'w')
+    # Use an additional filename suffix if we have been passed a sim_id
+    if @sim_id
+      sim_id_suffix = "." + @sim_id.to_s
+    else
+      sim_id_suffix = ""
+    end
 
+    # Set up output files
+    taus_file = File.open("#{@filename}.taus" + sim_id_suffix, 'w')
+    node_utilities_file = File.open("#{@filename}.node_utilities" + sim_id_suffix, 'w')
+    conjoint_utilities_file = File.open("#{@filename}.conjoint_utilities" + sim_id_suffix, 'w') 
 
     # Some initial output
     if debug?
