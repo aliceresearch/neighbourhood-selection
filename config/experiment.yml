@@ -4,3 +4,7 @@ experiment1:
   num_experiments: 10
   debug: false
 
+broadcastbest:
+  sim_name: scenario1
+  filename_prefix: broadcastbest
+  num_experiments: 30

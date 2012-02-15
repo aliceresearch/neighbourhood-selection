@@ -9,10 +9,13 @@ test:
       4: { p: 0.1, alpha: 1, theta: 2 }
       5: { p: 0.1, alpha: 1, theta: 2 }
 
+  node_strategies:
+    0: broadcast
+
   debug: false
 
 
-broadcast:
+scenario1:
   numnodes: 3
 
   node_parameters:
@@ -22,7 +25,7 @@ broadcast:
 
   node_strategies:
     0: broadcast
-  filename_suffix: -broadcast
+  filename_suffix: scenario1
 
   debug: false
 
@@ -37,7 +40,7 @@ smooth:
 
   node_strategies:
     0: smooth
-  filename_suffix: -smooth
+  filename_suffix: smooth
 
   debug: false
 
@@ -53,6 +56,6 @@ step:
 
   node_strategies:
     0: step
-  filename_suffix: -step
+  filename_suffix: step
 
   debug: false

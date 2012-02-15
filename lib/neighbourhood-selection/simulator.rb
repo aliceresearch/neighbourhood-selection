@@ -37,9 +37,9 @@ class Simulator
 
     # What filename stub should be used?
     if @CONFIG[:filename_suffix]
-      @filename = output_file_prefix + "-" + @sim_name + "-" + @CONFIG[:filename_suffix]
+      @filename = output_file_prefix + "-" + @CONFIG[:filename_suffix]
     else
-      @filename = output_file_prefix + "-" + @sim_name
+      @filename = output_file_prefix
     end
 
     # Store the nodes in a set rather than an array or anything else.
