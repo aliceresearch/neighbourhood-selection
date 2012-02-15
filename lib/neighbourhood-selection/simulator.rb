@@ -10,9 +10,7 @@ class Simulator
 
   @debug = false
 
-  # Create a new Simulator object and associated requirements. At present this
-  # creates a new set of nodes (6 by default; this can be overridden by passing
-  # in the number of nodes to create).
+  # Create a new Simulator object and associated requirements.
   #
   def initialize sim_name
 
@@ -40,7 +38,7 @@ class Simulator
     if @CONFIG[:filename_suffix]
       @filename = @sim_name + @CONFIG[:filename_suffix]
     else
-      @filename = @sim_name 
+      @filename = @sim_name
     end
 
     # Store the nodes in a set rather than an array or anything else.
