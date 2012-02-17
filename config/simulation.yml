@@ -24,13 +24,13 @@ scenario1:
       2: { p: 0.01, alpha: 1, theta: 110 } # node B
 
   node_strategies:
-    0: broadcast
-  filename_suffix: scenario1
+    0: step
+  filename_suffix: step
 
   debug: false
 
 
-smooth:
+scenario2:
   numnodes: 3
 
   node_parameters:
@@ -39,13 +39,13 @@ smooth:
       2: { p: 1, alpha: 1, theta: 0.8 } # node C
 
   node_strategies:
-    0: smooth
-  filename_suffix: smooth
+    0: step
+  filename_suffix: step
 
   debug: false
 
 
-step:
+scenario3:
   numnodes: 4
 
   node_parameters:
