@@ -12,7 +12,8 @@ test:
   node_strategies:
     0: broadcast
 
-  debug: false
+  debug: true
+  node_debug: true
 
 
 scenario1:

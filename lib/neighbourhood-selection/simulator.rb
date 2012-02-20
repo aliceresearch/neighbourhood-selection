@@ -126,7 +126,7 @@ class Simulator
       end
 
       # Add the node
-      @nodes.add Node.new i, strategy, debug?
+      @nodes.add Node.new i, strategy, @CONFIG[:node_debug]
     }
 
   end
