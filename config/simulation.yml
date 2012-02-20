@@ -20,10 +20,14 @@ test:
       time: 100
       node: 5
       action: remove
-    secondevent:
+    simultaneousevent:
       time: 100
       node: 1
       action: add
+    thirdevent:
+      time: 200
+      node: 1
+      action: remove
 
 
 scenario1:

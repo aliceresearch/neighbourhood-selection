@@ -1,8 +1,8 @@
-experiment1:
+testexperiment:
   sim_name: test
-  filename_prefix: experiment1
-  num_experiments: 10
-  debug: false
+  filename_prefix: testexperiment
+  num_experiments: 1
+  debug: true
 
 broadcastbest:
   sim_name: scenario1
