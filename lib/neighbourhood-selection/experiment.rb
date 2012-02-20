@@ -68,7 +68,7 @@ class Experiment
     # parallelise them.
     #
     # Loop through them here:
-    for exp in 0..@num_experiments
+    for exp in 0..@num_experiments-1
       if debug?
         puts "Experiment #{exp} starting."
       end
