@@ -15,6 +15,16 @@ test:
   debug: true
   node_debug: true
 
+  events:
+    myevent:
+      time: 100
+      node: 5
+      action: remove
+    secondevent:
+      time: 100
+      node: 1
+      action: add
+
 
 scenario1:
   numnodes: 3

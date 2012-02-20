@@ -51,6 +51,9 @@ class Simulator
     # Create the environment for the nodes, e.g. the network structure.
     createEnvironment
 
+    # Create events (dynamics, etc.)
+    createEvents
+
     @random = Random.new random_seed
     @gamma = Gamma.new @random
 
@@ -128,6 +131,37 @@ class Simulator
       # Add the node
       @nodes.add Node.new i, strategy, @CONFIG[:node_debug]
     }
+
+  end
+
+
+  # Populate the @nodes object with n new nodes, indexed incrementally from 0.
+  # If n is omitted, the value of 'numnodes' in the scenario configuration is
+  # used instead.
+  #
+  def createEvents events=@CONFIG[:events]
+    @events = {}
+
+    # Create each event indexed by its time
+    events.each do |name, event|
+
+      unless @events[event[:time]]
+        @events[event[:time]] = Set.new
+      end
+
+      @events[event[:time]].add ({:name => name}.merge(event))
+
+    end
+
+    if debug?
+      puts "Created the following events:"
+      @events.each do |time, eventset|
+        puts "#{time}:"
+        eventset.each do |event|
+          puts "  #{event[:name]}"
+        end
+      end
+    end
 
   end
 
