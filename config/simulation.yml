@@ -8,12 +8,14 @@ test:
       3: { p: 0.1, alpha: 1, theta: 2 }
       4: { p: 0.1, alpha: 1, theta: 2 }
       5: { p: 0.1, alpha: 1, theta: 2 }
+    1:
+      connected: false
 
   node_strategies:
     0: broadcast
 
   debug: true
-  node_debug: true
+  node_debug: false
 
   events:
     delete5:
