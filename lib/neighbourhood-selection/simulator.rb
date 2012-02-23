@@ -117,6 +117,7 @@ class Simulator
 
   end
 
+
   # Populate the @nodes object with n new nodes, indexed incrementally from 0.
   # If n is omitted, the value of 'numnodes' in the scenario configuration is
   # used instead.

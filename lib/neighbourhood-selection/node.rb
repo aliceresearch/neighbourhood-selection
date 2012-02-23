@@ -49,6 +49,10 @@ class Node
   end
 
 
+  # This provides the first part of a node's behaviour during one timestep.
+  # The method receives a list of the possible nodes, with which this node could
+  # communicate. It updates its local knowledge of that and selects the relevant
+  # neighbourhood from them. It returns this selected relevant neighbourhood.
   def step1 new_possible_nodes
     update_possible_nodes new_possible_nodes
 
