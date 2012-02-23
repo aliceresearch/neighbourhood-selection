@@ -35,6 +35,9 @@ class Simulator
     @sim_name = sim_name
     @sim_id = sim_id
 
+    # Initialise timestep to be zero
+    @timestep = 0
+
     # What filename stub should be used?
     if @CONFIG[:filename_suffix]
       @filename = output_file_prefix + "-" + @CONFIG[:filename_suffix]
@@ -128,8 +131,11 @@ class Simulator
         strategy = :broadcast
       end
 
+      # TODO: Set this in the config
+      connected = true
+
       # Add the node
-      @nodes.add Node.new i, strategy, @CONFIG[:node_debug]
+      @nodes.add Node.new i, strategy, connected, @CONFIG[:node_debug]
     }
 
   end
@@ -211,12 +217,36 @@ class Simulator
 
 
   # Run one discrete time step of the simulation.
-  # This iterates through each node, running their step1 and step2 methods.
+  #
+  # First, this triggers any events for this time step, then it iterates through
+  # each node, running their step1 and step2 methods.
+  #
   # Typically, this means they set their relevant neighbourhood based on
   # previous knowledge (e.g. tau values), communicate and sample benefits and
   # costs. They then update their tau values accordingly.
   #
   def step
+
+    # First, we increment the timestep.
+    # Putting this first means that the first time step will be 1, not 0.
+    @timestep += 1
+
+    # Secondly we trigger any events which have been defined for this time step.
+    if @events[@timestep]
+      @events[@timestep].each do |event|
+        if debug?
+          puts "Timestep is #{@timestep}, triggering event #{event[:name]}"
+        end
+
+        # Do whatever is required
+        handle_event event
+
+      end
+    end
+    
+    
+    # Thirdly, we iterate through each node, running one simulation cycle for
+    # each.
     @nodes.each do |node|
 
       # Step 1 tells the node what its current set of possible nodes are, and
@@ -224,7 +254,7 @@ class Simulator
       # responsible for determining this based on its prior knowledge (e.g. tau
       # values).
       #
-      neighbourhood = node.step1 @nodes.find_all { |n| n.node_id != node.node_id}
+      neighbourhood = node.step1 possible_nodes_for node
 
       # Next we determine the benefit and cost associated with each edge in the
       # relevant neighbourhood of the node.
@@ -248,6 +278,55 @@ class Simulator
 
   end
 
+
+  # This returns the set of all nodes it would be possible for the given node to
+  # communicate with, given the current set of nodes and network connectivity.
+  def possible_nodes_for node
+    @nodes.find_all { |n| n.node_id != node.node_id and n.is_connected? }
+  end
+  
+
+  # Handle an event that has been triggered.
+  def handle_event event
+
+    case event[:action]
+    when "remove"
+      remove_node event[:node]
+    when "add"
+      add_node event[:node]
+    else
+      raise "Unable to handle event named #{event[:name]} with action #{event[:action]}."
+    end
+
+  end
+
+
+  # Remove the node with id 'node_id' from the network.
+  def remove_node node_id
+
+    if debug?
+      puts "--> Removing node #{node_id}."
+    end
+
+    # We don't actually delete the node object, just remove it from the network.
+    @nodes.find { |n| n.node_id==node_id }.disconnect
+
+  end
+
+  # Connect the node with id 'node_id' to the network. Note that the node must
+  # have been created when the simulation was initialized.
+  def add_node node_id
+    if debug?
+      puts "--> Adding node #{node_id}."
+    end
+    
+    # We can assume the node did previously exist here, we are just connecting,
+    # not creating.
+    @nodes.find { |n| n.node_id==node_id }.connect
+
+  end
+
+
   def debug?
     @debug
   end
@@ -257,6 +336,10 @@ class Simulator
 
     unless @sim_name
       raise "Tried to run a simulation which has not yet been initialized."
+    end
+
+    unless @timestep == 0
+      raise "Tried to run a simulation which has already been run."
     end
 
     # Use an additional filename suffix if we have been passed a sim_id

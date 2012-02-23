@@ -9,7 +9,7 @@ class Node
   @debug = false
   attr_reader :debug
 
-  def initialize id, communication_strategy, debug=false
+  def initialize id, communication_strategy, connected, debug=false
     @possible_nodes = {}
     @taus = {}
     @last_node_utilities = {}
@@ -17,6 +17,7 @@ class Node
     @node_id = id
     @random = Random.new @node_id
     @debug = debug
+    @connected = connected
 
     # Pheromone parameters
     @initial_tau = 1.0
@@ -234,6 +235,29 @@ class Node
     end
 
   end
+
+
+  # Is this node connected to the network, or not?
+  def is_connected?
+    @connected
+  end
+
+  def connect
+    if is_connected? and debug?
+      puts "Warning: attempting to connect a node which is already connected."
+    end
+
+    @connected = true
+  end
+  
+  def disconnect
+    if (not is_connected?) and debug?
+      puts "Warning: attempting to disconnect a node which is not connected."
+    end
+
+    @connected = false
+  end
+
 
   # Should this node output debugging info?
   def debug?
