@@ -247,18 +247,10 @@ class Node
   end
 
   def connect
-    if is_connected? and debug?
-      puts "Warning: attempting to connect a node which is already connected."
-    end
-
     @connected = true
   end
   
   def disconnect
-    if (not is_connected?) and debug?
-      puts "Warning: attempting to disconnect a node which is not connected."
-    end
-
     @connected = false
   end
 

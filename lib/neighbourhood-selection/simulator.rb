@@ -96,6 +96,11 @@ class Simulator
         @node_parameters[source.node_id] = {}
       end
 
+      # Is this node initially connected to the network?
+      if @node_parameters[source.node_id][:connected] == false
+        source.disconnect
+      end
+
       # Then ensure each record is fully populated - don't create links to
       # oneself though.
       @nodes.each do |dest|
@@ -132,7 +137,9 @@ class Simulator
         strategy = :broadcast
       end
 
-      # TODO: Set this in the config
+      # We initially start with every node connected. They will be disconnected
+      # in createEnvironment if they are specified to start disconnected in the
+      # configuration file.
       connected = true
 
       # Add the node
@@ -283,7 +290,11 @@ class Simulator
   # This returns the set of all nodes it would be possible for the given node to
   # communicate with, given the current set of nodes and network connectivity.
   def possible_nodes_for node
-    @nodes.find_all { |n| n.node_id != node.node_id and n.is_connected? }
+    if node.is_connected?
+      @nodes.find_all { |n| n.node_id != node.node_id and n.is_connected? }
+    else
+      Set.new
+    end
   end
   
 
@@ -307,6 +318,10 @@ class Simulator
 
     if debug?
       puts "--> Removing node #{node_id}."
+
+      unless @nodes.find { |n| n.node_id==node_id}.is_connected?
+        puts "--> Warning: attempting to remove a node which is not connected!"
+      end
     end
 
     # We don't actually delete the node object, just remove it from the network.
@@ -319,6 +334,10 @@ class Simulator
   def add_node node_id
     if debug?
       puts "--> Adding node #{node_id}."
+
+      if @nodes.find { |n| n.node_id==node_id}.is_connected?
+        puts "--> Warning: attempting to connect a node which is already connected!"
+      end
     end
     
     # We can assume the node did previously exist here, we are just connecting,
