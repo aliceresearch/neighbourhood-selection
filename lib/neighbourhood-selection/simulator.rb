@@ -156,6 +156,11 @@ class Simulator
   def createEvents events=@CONFIG[:events]
     @events = {}
 
+    # If there are no events, don't do anything
+    unless events
+      return
+    end
+
     # Create each event indexed by its time
     events.each do |name, event|
 
