@@ -16,18 +16,31 @@ test:
   node_debug: true
 
   events:
-    myevent:
-      time: 100
+    delete5:
+      time: 2000
       node: 5
       action: remove
-    simultaneousevent:
-      time: 100
-      node: 1
-      action: add
-    thirdevent:
-      time: 200
-      node: 1
+    delete4:
+      time: 2000
+      node: 4
       action: remove
+    delete3:
+      time: 5000
+      node: 3
+      action: remove
+    addallback1:
+      time: 7500
+      node: 3
+      action: add
+    addallback2:
+      time: 7500
+      node: 4
+      action: add
+    addallback3:
+      time: 7500
+      node: 5
+      action: add
+      
 
 
 scenario1:
