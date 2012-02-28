@@ -4,11 +4,13 @@ testexperiment:
   num_experiments: 1
   debug: true
 
+
+# Static scenario experiments
+
 broadcastbest:
   sim_name: scenario1
   filename_prefix: broadcastbest
   num_experiments: 30
-
 
 smoothbest:
   sim_name: scenario2
@@ -18,4 +20,37 @@ smoothbest:
 stepbest:
   sim_name: scenario3
   filename_prefix: stepbest
+  num_experiments: 30
+
+
+# Sudden dynamics experiments
+
+scenario12:
+  sim_name: scenario12
+  filename_prefix: scenario12
+  num_experiments: 30
+
+scenario13:
+  sim_name: scenario13
+  filename_prefix: scenario13
+  num_experiments: 30
+
+scenario21:
+  sim_name: scenario21
+  filename_prefix: scenario21
+  num_experiments: 30
+
+scenario23:
+  sim_name: scenario23
+  filename_prefix: scenario23
+  num_experiments: 30
+
+scenario31:
+  sim_name: scenario31
+  filename_prefix: scenario31
+  num_experiments: 30
+
+scenario32:
+  sim_name: scenario32
+  filename_prefix: scenario32
   num_experiments: 30

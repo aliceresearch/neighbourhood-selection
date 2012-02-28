@@ -42,7 +42,6 @@ test:
       time: 7500
       node: 5
       action: add
-      
 
 
 scenario1:
@@ -86,6 +85,230 @@ scenario3:
 
   node_strategies:
     0: step
+  filename_suffix: step
+
+  debug: false
+
+
+# Sudden dynamics scenarios.
+
+scenario12:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    3:
+      connected: false
+    4:
+      connected: false
+    5:
+      connected: false
+
+  events:
+    broadcast-smooth1:
+      time: 5000
+      node: 2
+      action: remove
+    broadcast-smooth2:
+      time: 5000
+      node: 3
+      action: add
+
+  node_strategies:
+    0: step
+
+  filename_suffix: step
+
+  debug: false
+
+
+scenario13:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    3:
+      connected: false
+    4:
+      connected: false
+    5:
+      connected: false
+
+  events:
+    broadcast-step1:
+      time: 5000
+      node: 2
+      action: remove
+    broadcast-step2:
+      time: 5000
+      node: 4
+      action: add
+    broadcast-step3:
+      time: 5000
+      node: 5
+      action: add
+
+  node_strategies:
+    0: step
+
+  filename_suffix: step
+
+  debug: false
+
+
+scenario21:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    2:
+      connected: false
+    4:
+      connected: false
+    5:
+      connected: false
+
+  events:
+    smooth-broadcast1:
+      time: 5000
+      node: 3
+      action: remove
+    smooth-broadcast2:
+      time: 5000
+      node: 2
+      action: add
+
+  node_strategies:
+    0: step
+
+  filename_suffix: step
+
+  debug: false
+
+
+scenario23:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    2:
+      connected: false
+    4:
+      connected: false
+    5:
+      connected: false
+
+  events:
+    smooth-step1:
+      time: 5000
+      node: 3
+      action: remove
+    smooth-step2:
+      time: 5000
+      node: 4
+      action: add
+    smooth-step3:
+      time: 5000
+      node: 5
+      action: add
+
+  node_strategies:
+    0: step
+
+  filename_suffix: step
+
+  debug: false
+
+
+scenario31:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    2:
+      connected: false
+    3:
+      connected: false
+
+  events:
+    smooth-step1:
+      time: 5000
+      node: 4
+      action: remove
+    smooth-step2:
+      time: 5000
+      node: 5
+      action: remove
+    smooth-step3:
+      time: 5000
+      node: 2
+      action: add
+
+  node_strategies:
+    0: step
+
+  filename_suffix: step
+
+  debug: false
+
+
+scenario32:
+  numnodes: 6
+
+  node_parameters:
+    0:
+      1: { p: 1, alpha: 1, theta: 2 } # node A
+      2: { p: 0.01, alpha: 1, theta: 110 } # node B
+      3: { p: 1, alpha: 1, theta: 0.8 } # node C
+      4: { p: 0.1, alpha: 1, theta: 0.1 } # node D
+      5: { p: 1, alpha: 1, theta: 1.8 } # node E
+    2:
+      connected: false
+    3:
+      connected: false
+
+  events:
+    smooth-step1:
+      time: 5000
+      node: 4
+      action: remove
+    smooth-step2:
+      time: 5000
+      node: 5
+      action: remove
+    smooth-step3:
+      time: 5000
+      node: 3
+      action: add
+
+  node_strategies:
+    0: step
+
   filename_suffix: step
 
   debug: false
