@@ -71,7 +71,7 @@ class Gamma
       u = @random.rand
 
       while u <= 1e-7
-        u = @random.random()
+        u = @random.rand
       end
 
       return -Math.log(u) * beta
