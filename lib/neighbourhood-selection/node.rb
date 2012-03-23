@@ -1,11 +1,16 @@
 require "set"
 require "neighbourhood-selection/base_selection_strategies"
+require "neighbourhood-selection/bandit_meta_strategies"
+require "neighbourhood-selection/ensemble_meta_strategies"
 
 
 class Node
 
   # Mix in the basic strategies: broadcast, smooth and step
   include Base_Selection_Strategies
+  include Ensemble_Meta_Strategies
+  include Bandit_Meta_Strategies
+
 
   attr_reader :node_id
   attr_reader :taus
