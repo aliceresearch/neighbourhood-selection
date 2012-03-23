@@ -1,6 +1,11 @@
 require "set"
+require "neighbourhood-selection/base_selection_strategies"
+
 
 class Node
+
+  # Mix in the basic strategies: broadcast, smooth and step
+  include Base_Selection_Strategies
 
   attr_reader :node_id
   attr_reader :taus
@@ -27,18 +32,8 @@ class Node
     # Utility parameters
     @weights = { :beta => 0.5, :gamma => 0.5 }
 
-    # Choose one of these three:
-    #@communication_strategy = :broadcast
-    #@communication_strategy = :smooth
-    #@communication_strategy = :step
+    # The communication strategy is set in the configuration and passed in.
     @communication_strategy = communication_strategy
-
-    # Communication strategy parameters:
-    #@step_epsilon = 0.95
-    #@step_eta = 0.01
-
-    @step_epsilon = 0.95
-    @step_eta = 0.01
 
     if debug?
       print "Node #{@node_id} created: "
@@ -165,67 +160,18 @@ class Node
     destination.puts cumulative_conjoint_utility
   end
 
+  # Select and return the relevant neighbourhood.
+  #
+  # The strategy currently in @communication_strategy must exist as a method.
   def select_relevant_neighbourhood
-    case @communication_strategy
-      when :broadcast then select_all
-      when :smooth then select_smooth
-      when :step then select_step
-      else
-        warn "Warning: Node #{@node_id} using undefined neighbourhood selection algorithm. This will result in it selecting no nodes."
-        Set.new
+    begin
+      method(@communication_strategy).call
+    rescue => e
+      warn "Warning: The neighbourhood selection strategy generated an exception of type #{e.class}."
+      warn "--> #{e}"
+      warn "--> This node will select *no nodes*."
+      Set.new
     end
-  end
-
-  def select_smooth
-    selected_nodes = Set.new
-    max_tau = @taus.values.max
-    @possible_nodes.each {|n|
-      p = (1 + @taus[n.node_id])/max_tau
-      if @random.rand < p
-        selected_nodes.add n
-      end
-    }
-
-    # Bit of debugging output
-    if debug? and @node_id == 0
-      print_selected_nodes 0, selected_nodes
-    end
-
-    selected_nodes
-  end
-
-  def select_step
-    selected_nodes = Set.new
-    @possible_nodes.each {|n|
-      # p = (1 + @taus[n.node_id])/max_tau
-      if @taus[n.node_id] > @step_epsilon
-        selected_nodes.add n
-      else
-        if @random.rand < @step_eta
-          selected_nodes.add n
-        end
-      end
-    }
-
-    # Bit of debugging output
-    if debug? and @node_id == 0
-      print_selected_nodes 0, selected_nodes
-    end
-
-    selected_nodes
-
-  end
-
-  def select_all
-    selected_nodes = Set.new @possible_nodes
-
-    # Bit of debugging output
-    if debug? and @node_id == 0
-      print_selected_nodes 0, selected_nodes
-    end
-
-    selected_nodes
-
   end
 
   def print_selected_nodes id, selected_nodes
