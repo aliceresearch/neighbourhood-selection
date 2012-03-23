@@ -8,8 +8,6 @@ class Simulator
 
   attr_reader :nodes
 
-  @debug = false
-
   # Create a new Simulator object and associated requirements.
   #
   def initialize sim_name, sim_id, config_file, output_file_prefix, random_seed

@@ -11,7 +11,6 @@ class Node
   attr_reader :taus
 
   # Should this node output debugging info?
-  @debug = false
   attr_reader :debug
 
   def initialize id, communication_strategy, connected, debug=false
