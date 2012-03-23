@@ -4,6 +4,19 @@ testexperiment:
   num_experiments: 1
   debug: true
 
+# Attempt at some complex scenarios
+complex1:
+  sim_name: complex1
+  filename_prefix: complex1
+  num_experiments: 30
+  debug: true
+
+complex2:
+  sim_name: complex2
+  filename_prefix: complex2
+  num_experiments: 30
+  debug: true
+
 
 # Static scenario experiments
 
