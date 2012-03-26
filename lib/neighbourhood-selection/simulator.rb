@@ -1,5 +1,6 @@
 require "set"
 require "yaml"
+require "deep_merge"
 require "neighbourhood-selection/util"
 require "neighbourhood-selection/node"
 require "neighbourhood-selection/gamma"
@@ -10,24 +11,55 @@ class Simulator
 
   # Create a new Simulator object and associated requirements.
   #
-  def initialize sim_name, sim_id, config_file, output_file_prefix, random_seed
+  def initialize sim_name, sim_id, scenario_config_file, output_file_prefix, random_seed, experiment_config=Hash.new
 
     # Load simulation scenario specific configuration
-    @CONFIG = YAML.load_file(config_file)[sim_name]
+    @SCENARIO_CONFIG = YAML.load_file(scenario_config_file)[sim_name]
 
-    unless @CONFIG
-      raise "No configuration found for simulation #{sim_name}."
+    unless @SCENARIO_CONFIG
+      raise "No configuration found for scenario #{sim_name}."
     end
 
     # YAML files are parsed with keys as Strings rather than symbols, which we
     # use internally. So, convert the Strings to symbols.
-    @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
+    @SCENARIO_CONFIG = Hash.transform_keys_to_symbols(@SCENARIO_CONFIG)
 
     # We also need to process some string values into symbols.
-    @CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@CONFIG[:node_strategies])
+    @SCENARIO_CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@SCENARIO_CONFIG[:node_strategies])
+
+
+    #### TESTING
+
+    #experiment_config = {node_strategies: {0 => :smooth, 1 => :step} }
+
+    #puts "***********"
+    #puts "Default scenario config:"
+    #p @SCENARIO_CONFIG
+    #puts "***********"
+    #puts "Experiment config:"
+    #p experiment_config
+
+    #### END TESTING
+
+
+
+    # Merge simulation configuration and experiment configuration.
+    # Experiment configuration takes precedence, and will overwrite scenario
+    # "defaults", if specified. We assume that the config has already been
+    # "cleaned" to use symbols.
+    @config = experiment_config
+    @config.deep_merge(@SCENARIO_CONFIG)
+
+    #### TESTING
+
+    #puts "***********"
+    #puts "Merged config:"
+    #p @config
+
+    ###### END TESTING
 
     # Should we print debugging output?
-    @debug = @CONFIG[:debug]
+    @debug = @config[:debug]
 
     # Set this simulation's name and ID. This tells us we have initialized it.
     @sim_name = sim_name
@@ -37,8 +69,8 @@ class Simulator
     @timestep = 0
 
     # What filename stub should be used?
-    if @CONFIG[:filename_suffix]
-      @filename = output_file_prefix + "-" + @CONFIG[:filename_suffix]
+    if @config[:filename_suffix]
+      @filename = output_file_prefix + "-" + @config[:filename_suffix]
     else
       @filename = output_file_prefix
     end
@@ -72,8 +104,8 @@ class Simulator
     # First read in as much information as we have available in the
     # configuration.
 
-    if @CONFIG[:node_parameters]
-      @node_parameters = @CONFIG[:node_parameters]
+    if @config[:node_parameters]
+      @node_parameters = @config[:node_parameters]
     else
       @node_parameters = {}
     end
@@ -125,7 +157,7 @@ class Simulator
   # If n is omitted, the value of 'numnodes' in the scenario configuration is
   # used instead.
   #
-  def createNodes n=@CONFIG[:numnodes], strategies=@CONFIG[:node_strategies]
+  def createNodes n=@config[:numnodes], strategies=@config[:node_strategies]
     n.times { |i|
 
       # Determine node communication strategy
@@ -141,8 +173,16 @@ class Simulator
       connected = true
 
       # Add the node
-      @nodes.add Node.new i, strategy, connected, @CONFIG[:node_debug]
+      @nodes.add Node.new i, strategy, connected, @config[:node_debug]
     }
+
+    if debug?
+      puts
+      puts "Node parameters after filling gaps with any defaults."
+      @nodes.each { |n| p n }
+      puts
+    end
+
 
   end
 
@@ -151,7 +191,7 @@ class Simulator
   # If n is omitted, the value of 'numnodes' in the scenario configuration is
   # used instead.
   #
-  def createEvents events=@CONFIG[:events]
+  def createEvents events=@config[:events]
     @events = {}
 
     # If there are no events, don't do anything
