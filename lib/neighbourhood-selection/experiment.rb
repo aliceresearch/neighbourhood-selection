@@ -49,9 +49,13 @@ class Experiment
     @scenario_name = @CONFIG[:scenario]
 
     # Read in the seeds for the random number generator.
-    @seeds = []
-    File.open('./config/seeds').each do |line|
-      @seeds << line.to_i
+    begin
+      @seeds = []
+      File.open('./config/seeds').each do |line|
+        @seeds << line.to_i
+      end
+    rescue
+      raise "Error: No random seed file found in ./config/seeds."
     end
 
     # Some validation
