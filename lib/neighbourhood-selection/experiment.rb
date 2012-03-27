@@ -28,7 +28,7 @@ class Experiment
     end
 
     # Should we print debugging output?
-    @debug = @CONFIG[:debug] or false
+    @debug = (@CONFIG[:debug] or false)
 
     # Set this simulation's name. This tells us we have initialized it.
     @experiment_name = experiment_name
