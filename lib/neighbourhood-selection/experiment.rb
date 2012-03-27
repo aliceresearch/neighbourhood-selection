@@ -40,14 +40,10 @@ class Experiment
     @results_dir = (@CONFIG[:results_dir] or "results")
 
     # What filename prefix should be used?
-    if @CONFIG[:filename_prefix]
-      @filename_prefix = @CONFIG[:filename_prefix]
-    else
-      @filename_prefix = ""
-    end
+    @filename_prefix = (@CONFIG[:filename_prefix] or experiment_name)
 
     # What file should the simulator use for its config?
-    @sim_config_file = "./config/simulation.yml"
+    @scenario_config_file = (@CONFIG[:scenario_config_file] or "./config/scenarios.yml")
 
     # And what simulation should be loaded from that file?
     @scenario_name = @CONFIG[:scenario]
