@@ -68,12 +68,8 @@ class Simulator
     # Initialise timestep to be zero
     @timestep = 0
 
-    # What filename stub should be used?
-    if @config[:filename_suffix]
-      @filename = output_file_prefix + "-" + @config[:filename_suffix]
-    else
-      @filename = output_file_prefix
-    end
+    # Set the filename stub
+    @filename = output_file_prefix
 
     # Store the nodes in a set rather than an array or anything else.
     @nodes = Set.new
