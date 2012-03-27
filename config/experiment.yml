@@ -1,69 +1,235 @@
 testexperiment:
-  sim_name: test
-  filename_prefix: testexperiment
-  num_experiments: 1
+  #filename_prefix: overridden_name
+  #scenario_config_file: ./config/myscenarios.yml
+  #results_dir: results/test-experiments
+  scenario: test
+  num_trials: 1
   debug: true
+
+  # Define your scenario variants to test here.
+  # Results will be indexed with a filename component matching the name of the
+  # variant.
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
+
 
 # Attempt at some complex scenarios
 complex1:
-  sim_name: complex1
-  filename_prefix: complex1
-  num_experiments: 30
+  scenario: complex1
+  num_trials: 30
   debug: true
 
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
+
+
 complex2:
-  sim_name: complex2
-  filename_prefix: complex2
-  num_experiments: 30
+  scenario: complex2
+  num_trials: 30
   debug: true
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 
 # Static scenario experiments
 
 broadcastbest:
-  sim_name: scenario1
-  filename_prefix: broadcastbest
-  num_experiments: 30
+  scenario: scenario1
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
+
 
 smoothbest:
-  sim_name: scenario2
-  filename_prefix: smoothbest
-  num_experiments: 30
+  scenario: scenario2
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 stepbest:
-  sim_name: scenario3
-  filename_prefix: stepbest
-  num_experiments: 30
+  scenario: scenario3
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 
 # Sudden dynamics experiments
 
 scenario12:
-  sim_name: scenario12
-  filename_prefix: scenario12
-  num_experiments: 30
+  scenario: scenario12
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 scenario13:
-  sim_name: scenario13
-  filename_prefix: scenario13
-  num_experiments: 30
+  scenario: scenario13
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 scenario21:
-  sim_name: scenario21
-  filename_prefix: scenario21
-  num_experiments: 30
+  scenario: scenario21
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 scenario23:
-  sim_name: scenario23
-  filename_prefix: scenario23
-  num_experiments: 30
+  scenario: scenario23
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 scenario31:
-  sim_name: scenario31
-  filename_prefix: scenario31
-  num_experiments: 30
+  scenario: scenario31
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
 
 scenario32:
-  sim_name: scenario32
-  filename_prefix: scenario32
-  num_experiments: 30
+  scenario: scenario32
+  num_trials: 30
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0: broadcast
+
+    smooth:
+      node_strategies:
+        0: smooth
+
+    step:
+      node_strategies:
+        0: step
+

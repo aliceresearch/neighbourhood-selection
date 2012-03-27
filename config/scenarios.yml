@@ -1,6 +1,16 @@
+# The name of the scenario is the root of a YAML tree.
 test:
+
+  # We must specify how many nodes exist in this scenario. They do not have to
+  # be all specified, or even connected, however.
   numnodes: 6
 
+  # Here we can specify (a subset of) the network information, i.e. whether a
+  # node is initially connected or not, and the costs and benefits associated
+  # with each edge. In this case, they are the parameters for the Bernoulli and
+  # gamma distributions.
+  # 
+  # Note that anything omitted here will be set to default values.
   node_parameters:
     0:
       1: { p: 1, alpha: 1, theta: 2 }
@@ -11,12 +21,19 @@ test:
     1:
       connected: false
 
-  node_strategies:
-    0: broadcast
+  # The strategy "broadcast" is used for all nodes, unless specified.
+  # This will usually be overridden in the experimental variants configuration,
+  # but can also be specified here as follows:
+  #
+  #node_strategies:
+    #0: broadcast
 
+  # Should we output debugging information about the simulation or the nodes?
   debug: true
   node_debug: false
 
+  # We can define events, which occur at the given time and can either be the
+  # addition or removal of a node. Each event must have a unique name.
   events:
     delete5:
       time: 2000
@@ -51,10 +68,6 @@ scenario1:
     0:
       1: { p: 1, alpha: 1, theta: 2 } # node A
       2: { p: 0.01, alpha: 1, theta: 110 } # node B
-
-  node_strategies:
-    0: step
-  filename_suffix: step
 
   debug: false
 
