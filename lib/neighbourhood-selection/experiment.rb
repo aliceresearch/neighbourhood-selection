@@ -19,8 +19,13 @@ class Experiment
     @CONFIG = Hash.transform_keys_to_symbols(@CONFIG)
 
     # We also need to process some string values into symbols.
-    # Well, if we did, this is how we'd do it:
-    #@CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@CONFIG[:node_strategies])
+    # The only place this will be needed is if the experiment contains variants,
+    # which specify node strategies:
+    if @CONFIG[:scenario_variants]
+      @CONFIG[:scenario_variants].each do |name,config|
+        config[:node_strategies] = Hash.transform_values_to_symbols(config[:node_strategies])
+      end
+    end
 
     # Should we print debugging output?
     @debug = @CONFIG[:debug] or false
@@ -28,8 +33,11 @@ class Experiment
     # Set this simulation's name. This tells us we have initialized it.
     @experiment_name = experiment_name
 
-    # How many runs of the experiment should we conduct?
-    @num_experiments = @CONFIG[:num_experiments]
+    # How many runs of the experiment / each variant should we conduct?
+    @num_trials = (@CONFIG[:num_trials] or 1)
+
+    # Where should we put the results?
+    @results_dir = (@CONFIG[:results_dir] or "results")
 
     # What filename prefix should be used?
     if @CONFIG[:filename_prefix]
@@ -42,7 +50,7 @@ class Experiment
     @sim_config_file = "./config/simulation.yml"
 
     # And what simulation should be loaded from that file?
-    @sim_name = @CONFIG[:sim_name]
+    @scenario_name = @CONFIG[:scenario]
 
     # Read in the seeds for the random number generator.
     @seeds = []
@@ -51,36 +59,75 @@ class Experiment
     end
 
     # Some validation
-    if @sim_name == "" or !@sim_name
+    if @scenario_name == "" or !@scenario_name
       raise "No simulation name given in experiment configuration file."
     end
 
-    if @seeds.length < @num_experiments
-      raise "Not enough random seeds for #{@num_experiments} experiments."
+    if @seeds.length < @num_trials
+      raise "Not enough random seeds for #{@num_trials} trials."
     end
 
   end
 
 
-  def run
+  # Run a particular experimental variant.
+  # If no variant config is given, the vanilla scenario will be run.
+  def run_variant variant_filename_prefix="", variant_config=Hash.new
+
+    # Where to put and what to to call this variant's results files:
+    variant_filename_prefix = @results_dir + "/" + @filename_prefix + "-" + variant_filename_prefix
+    
     # For now, experiments are conducted in series.
     # TODO: It would be nice if there was something more clever here that could
     # parallelise them.
     #
     # Loop through them here:
-    for exp in 0..@num_experiments-1
+    for trial in 0..@num_trials-1
       if debug?
-        puts "Experiment #{exp} starting."
+        puts "Trial #{trial} starting."
       end
 
       # Create simulator object
-      sim = Simulator.new @sim_name, exp, @sim_config_file, @filename_prefix, @seeds[exp]
+      sim = Simulator.new @scenario_name, trial, @scenario_config_file, variant_filename_prefix, @seeds[trial], variant_config
 
       sim.run
 
       if debug?
-        puts "Experiment #{exp} finished."
+        puts "--> Trial #{trial} finished."
       end
+    end
+
+  end
+
+
+  # Run this experiment, or set of experimental variants
+  def run
+    if @CONFIG[:scenario_variants]
+      @CONFIG[:scenario_variants].each do |variant_name, variant_config|
+
+        # Was the filename overridden in the variant config?
+        if variant_config[:filename_prefix]
+          variant_filename_prefix = variant_config[:filename_prefix]
+        else
+          variant_filename_prefix = variant_name.to_s
+        end
+
+        # Run the experiment itself
+        run_variant variant_filename_prefix, variant_config
+
+        if debug?
+          puts "Experimental variant #{variant_filename_prefix} finished."
+        end
+
+      end
+    else
+        # No variants specified, just run the vanilla scenario
+        run_variant
+
+        if debug?
+          puts "Experiment finished."
+        end
+
     end
 
   end
