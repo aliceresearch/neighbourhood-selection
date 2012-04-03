@@ -412,18 +412,14 @@ class Simulator
 
     # Check the directory exists; if not, create it.
     # Plus some useful warnings.
-    if File.directory?(File.dirname(@filename))
-      warn "Warning: Results directory already exists. I may be overwriting previous results."
-    else
+    unless File.directory?(File.dirname(@filename))
+      puts "Warning: The results directory #{File.dirname(@filename)} does not exist. I am creating it now. Unless you are not running the simulation as part of an experiment, this is almost certainly not what you want."
       begin
         FileUtils.mkpath(File.dirname(@filename))
       rescue
         warn "The results directory #{File.dirname(@filename)} does not exist and I can't create it."
         warn "Check your configuration."
         exit
-      end
-      if debug?
-        puts "Created results directory: #{File.dirname(@filename)}."
       end
     end
 

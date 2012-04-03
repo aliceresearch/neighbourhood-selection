@@ -1,4 +1,5 @@
 require "yaml" # For parsing the configuration.
+require "fileutils" # For recursively creating directories.
 
 require "neighbourhood-selection/simulator"
 
@@ -39,6 +40,9 @@ class Experiment
 
     # Where should we put the results?
     @results_dir = (@CONFIG[:results_dir] or "results")
+
+    # Create the results directory, if needed.
+    create_results_dir
 
     # What filename prefix should be used?
     @filename_prefix = (@CONFIG[:filename_prefix] or experiment_name)
@@ -131,6 +135,26 @@ class Experiment
 
     end
 
+  end
+
+
+  # Create the directory currently in results_dir, if it does not yet exist.
+  # Some useful warnings are also included.
+  def create_results_dir
+    if File.directory?(@results_dir)
+      warn "Warning: Results directory already exists. I may be overwriting previous results."
+    else
+      begin
+        FileUtils.mkpath(@results_dir)
+      rescue
+        warn "Error: The results directory #{@results_dir} does not exist and I can't create it."
+        warn "Check your configuration."
+        exit
+      end
+      if debug?
+        puts "Created results directory: #{@results_dir}."
+      end
+    end
   end
 
 
