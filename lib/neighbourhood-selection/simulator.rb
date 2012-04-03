@@ -1,6 +1,8 @@
-require "set"
-require "yaml"
-require "deep_merge"
+require "set" # For storing collections of nodes.
+require "yaml" # For parsing the configuration files.
+require "deep_merge" # For merging simulator and experiment configurations.
+require "fileutils" # For recursively creating directories.
+
 require "neighbourhood-selection/util"
 require "neighbourhood-selection/node"
 require "neighbourhood-selection/gamma"

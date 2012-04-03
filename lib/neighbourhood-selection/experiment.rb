@@ -1,4 +1,5 @@
-require "yaml"
+require "yaml" # For parsing the configuration.
+
 require "neighbourhood-selection/simulator"
 
 class Experiment
