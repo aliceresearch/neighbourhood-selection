@@ -29,36 +29,12 @@ class Simulator
     # We also need to process some string values into symbols.
     @SCENARIO_CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@SCENARIO_CONFIG[:node_strategies])
 
-
-    #### TESTING
-
-    #experiment_config = {node_strategies: {0 => :smooth, 1 => :step} }
-
-    #puts "***********"
-    #puts "Default scenario config:"
-    #p @SCENARIO_CONFIG
-    #puts "***********"
-    #puts "Experiment config:"
-    #p experiment_config
-
-    #### END TESTING
-
-
-
     # Merge simulation configuration and experiment configuration.
     # Experiment configuration takes precedence, and will overwrite scenario
     # "defaults", if specified. We assume that the config has already been
     # "cleaned" to use symbols.
     @config = experiment_config
     @config.deep_merge(@SCENARIO_CONFIG)
-
-    #### TESTING
-
-    #puts "***********"
-    #puts "Merged config:"
-    #p @config
-
-    ###### END TESTING
 
     # Should we print debugging output?
     @debug = @config[:debug]
@@ -380,7 +356,7 @@ class Simulator
         puts "--> Warning: attempting to connect a node which is already connected!"
       end
     end
-    
+
     # We can assume the node did previously exist here, we are just connecting,
     # not creating.
     @nodes.find { |n| n.node_id==node_id }.connect
