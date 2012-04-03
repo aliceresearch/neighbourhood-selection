@@ -408,6 +408,23 @@ class Simulator
       sim_id_suffix = ""
     end
 
+    # Check the directory exists; if not, create it.
+    # Plus some useful warnings.
+    if File.directory?(File.dirname(@filename))
+      warn "Warning: Results directory already exists. I may be overwriting previous results."
+    else
+      begin
+        FileUtils.mkpath(File.dirname(@filename))
+      rescue
+        warn "The results directory #{File.dirname(@filename)} does not exist and I can't create it."
+        warn "Check your configuration."
+        exit
+      end
+      if debug?
+        puts "Created results directory: #{File.dirname(@filename)}."
+      end
+    end
+
     # Set up output files
     taus_file = File.open("#{@filename}.taus" + sim_id_suffix, 'w')
     node_utilities_file = File.open("#{@filename}.node_utilities" + sim_id_suffix, 'w')
