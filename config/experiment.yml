@@ -1,7 +1,7 @@
 testexperiment:
   #filename_prefix: overridden_name
   #scenario_config_file: ./config/myscenarios.yml
-  #results_dir: results/test-experiments
+  results_dir: results/test-experiments
   scenario: test
   num_trials: 1
   debug: true
@@ -29,6 +29,7 @@ complex1:
   scenario: complex1
   num_trials: 30
   debug: true
+  results_dir: results/dynamics-sudden/complex1
 
   scenario_variants:
 
@@ -49,6 +50,7 @@ complex2:
   scenario: complex2
   num_trials: 30
   debug: true
+  results_dir: results/dynamics-sudden/complex2
 
   scenario_variants:
 
@@ -70,6 +72,7 @@ complex2:
 broadcastbest:
   scenario: scenario1
   num_trials: 30
+  results_dir: results/baseline-scenarios/1-broadcast-best
 
   scenario_variants:
 
@@ -89,6 +92,7 @@ broadcastbest:
 smoothbest:
   scenario: scenario2
   num_trials: 30
+  results_dir: results/baseline-scenarios/2-smooth-best
 
   scenario_variants:
 
@@ -107,6 +111,7 @@ smoothbest:
 stepbest:
   scenario: scenario3
   num_trials: 30
+  results_dir: results/baseline-scenarios/3-step-best
 
   scenario_variants:
 
