@@ -9,7 +9,7 @@ test:
   # node is initially connected or not, and the costs and benefits associated
   # with each edge. In this case, they are the parameters for the Bernoulli and
   # gamma distributions.
-  # 
+  #
   # Note that anything omitted here will be set to default values.
   node_parameters:
     0:
@@ -23,7 +23,8 @@ test:
 
   # The strategy "broadcast" is used for all nodes, unless specified.
   # This will usually be overridden in the experimental variants configuration,
-  # but can also be specified here as follows:
+  # but can also be specified here as follows. You shouldn't usually need to do
+  # this, however.
   #
   #node_strategies:
     #0: broadcast
@@ -60,6 +61,8 @@ test:
       node: 5
       action: add
 
+
+# Here are some more scenarios.
 
 scenario1:
   numnodes: 3
