@@ -6,9 +6,14 @@ testexperiment:
   num_trials: 1
   debug: true
 
-  # Define your scenario variants to test here.
-  # Results will be indexed with a filename component matching the name of the
-  # variant.
+  # Define your scenario variants to test here.  Results will be indexed with a
+  # filename component matching the name of the variant.
+  #
+  # In this case, we have five variants, where node 0 uses the "broadcast",
+  # "smooth", "step", "bandit_example" and "ensemble_example" strategies
+  # respectively. All other nodes use the default as defined in the scenario
+  # (which in this case is "broadcast").
+  #
   scenario_variants:
 
     broadcast:
@@ -22,6 +27,14 @@ testexperiment:
     step:
       node_strategies:
         0: step
+
+    bandit:
+      node_strategies:
+        0: bandit_example
+
+    ensemble:
+      node_strategies:
+        0: ensemble_example
 
 
 # Attempt at some complex scenarios
