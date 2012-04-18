@@ -391,11 +391,6 @@ class Simulator
       puts "."
     end
 
-    # Set up output results file headers
-    @taus_file.puts "trial timestep #{list_nodes_except 0}"
-    @node_utilities_file.puts "trial timestep #{list_nodes_except 0}"
-    @conjoint_utilities_file.puts "trial timestep utility"
-
 
     # Run a number of simulation steps.
     # Simulator.step can take a block. If one is passed in, then this is

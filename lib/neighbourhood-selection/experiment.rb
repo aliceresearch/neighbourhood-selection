@@ -100,6 +100,19 @@ class Experiment
       # Create simulator object
       sim = Simulator.new @scenario_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
 
+      # If this is the first trial, we should first create column headers for
+      # the output files.
+      #
+      # This is done here since we have to know how many nodes were specified in
+      # the scenario, hence a simulator must have been created using that
+      # configuration.
+      # TODO: I don't like this being here, it feels hacky. Suggestions welcome.
+      if trial == 0
+        taus_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
+        node_utilities_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
+        conjoint_utilities_file.puts "Trial Timestep Utility"
+      end
+
       sim.run
 
       if debug?
