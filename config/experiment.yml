@@ -3,7 +3,7 @@ testexperiment:
   #scenario_config_file: ./config/myscenarios.yml
   results_dir: results/test-experiments
   scenario: test
-  num_trials: 1
+  num_trials: 2
   debug: true
 
   # Define your scenario variants to test here.  Results will be indexed with a
@@ -28,11 +28,11 @@ testexperiment:
       node_strategies:
         0: step
 
-    bandit:
+    not-a-bandit:
       node_strategies:
         0: bandit_example
 
-    ensemble:
+    not-an-ensemble:
       node_strategies:
         0: ensemble_example
 
