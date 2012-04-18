@@ -197,7 +197,7 @@ class Node
   def connect
     @connected = true
   end
-  
+
   def disconnect
     @connected = false
   end

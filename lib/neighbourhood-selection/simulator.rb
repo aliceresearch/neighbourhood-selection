@@ -270,8 +270,8 @@ class Simulator
 
       end
     end
-    
-    
+
+
     # Thirdly, we iterate through each node, running one simulation cycle for
     # each.
     @nodes.each do |node|
@@ -315,7 +315,7 @@ class Simulator
       Set.new
     end
   end
-  
+
 
   # Handle an event that has been triggered.
   def handle_event event
@@ -381,7 +381,7 @@ class Simulator
       raise "Tried to run a simulation which has already been run."
     end
 
-    # Some initial output
+    # Some initial debugging output
     if debug?
       puts "Beginning simulation with #{@nodes.length} nodes."
       print "Node IDs are:"
@@ -397,8 +397,8 @@ class Simulator
     #
     10000.times do
       step do
-        # This block is executed at the end of each time step. It can be used for
-        # collecting data and printing it out, for example.
+        # This block is executed at the end of each time step. It can be used
+        # for collecting data and printing it out, for example.
 
         # We're only really interested in tracking one node, node 0
         interesting_node = @nodes.find { |n| n.node_id==0 }
