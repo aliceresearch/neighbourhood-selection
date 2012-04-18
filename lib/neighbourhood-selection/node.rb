@@ -125,7 +125,6 @@ class Node
       # puts "node_id #{i} tau #{t}"
       destination.print " #{t}"
     }
-    destination.puts
   end
 
   # Print the node ID and the current utility obtained from each possible node.
@@ -142,7 +141,6 @@ class Node
       # puts "node_id #{i} tau #{u}"
       destination.print " #{u}"
     }
-    destination.puts
   end
 
   # Return the total cumulative conjoint utility so far accumulated by this
@@ -161,7 +159,7 @@ class Node
   # given, output goes to STDOUT.
   #
   def print_cumulative_conjoint_utility destination=STDOUT
-    destination.puts cumulative_conjoint_utility
+    destination.print cumulative_conjoint_utility
   end
 
   # Select and return the relevant neighbourhood.

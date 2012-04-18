@@ -81,7 +81,12 @@ class Experiment
 
     # Where to put and what to to call this variant's results files:
     variant_filename_prefix = @results_dir + "/" + @filename_prefix + "-" + variant_filename_prefix
-    
+
+    # Open files
+    taus_file = File.open("#{variant_filename_prefix}.taus", 'w')
+    node_utilities_file = File.open("#{variant_filename_prefix}.node_utilities", 'w')
+    conjoint_utilities_file = File.open("#{variant_filename_prefix}.conjoint_utilities", 'w')
+
     # For now, experiments are conducted in series.
     # TODO: It would be nice if there was something more clever here that could
     # parallelise them.
@@ -93,7 +98,7 @@ class Experiment
       end
 
       # Create simulator object
-      sim = Simulator.new @scenario_name, trial, @scenario_config_file, variant_filename_prefix, @seeds[trial], variant_config
+      sim = Simulator.new @scenario_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
 
       sim.run
 
@@ -101,6 +106,11 @@ class Experiment
         puts "--> Trial #{trial} finished."
       end
     end
+
+    # Close files
+    taus_file.close
+    node_utilities_file.close
+    conjoint_utilities_file.close
 
   end
 

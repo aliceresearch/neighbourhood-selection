@@ -13,7 +13,7 @@ class Simulator
 
   # Create a new Simulator object and associated requirements.
   #
-  def initialize sim_name, sim_id, scenario_config_file, output_file_prefix, random_seed, experiment_config=Hash.new
+  def initialize sim_name, sim_id, scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, random_seed, experiment_config=Hash.new
 
     # Load simulation scenario specific configuration
     @SCENARIO_CONFIG = YAML.load_file(scenario_config_file)[sim_name]
@@ -46,8 +46,10 @@ class Simulator
     # Initialise timestep to be zero
     @timestep = 0
 
-    # Set the filename stub
-    @filename = output_file_prefix
+    # Where to send the output data
+    @taus_file = taus_file
+    @node_utilities_file = node_utilities_file
+    @conjoint_utilities_file = conjoint_utilities_file
 
     # Store the nodes in a set rather than an array or anything else.
     @nodes = Set.new
@@ -379,31 +381,6 @@ class Simulator
       raise "Tried to run a simulation which has already been run."
     end
 
-    # Use an additional filename suffix if we have been passed a sim_id
-    if @sim_id
-      sim_id_suffix = "." + @sim_id.to_s
-    else
-      sim_id_suffix = ""
-    end
-
-    # Check the directory exists; if not, create it.
-    # Plus some useful warnings.
-    unless File.directory?(File.dirname(@filename))
-      puts "Warning: The results directory #{File.dirname(@filename)} does not exist. I am creating it now. Unless you are not running the simulation as part of an experiment, this is almost certainly not what you want."
-      begin
-        FileUtils.mkpath(File.dirname(@filename))
-      rescue
-        warn "The results directory #{File.dirname(@filename)} does not exist and I can't create it."
-        warn "Check your configuration."
-        exit
-      end
-    end
-
-    # Set up output files
-    taus_file = File.open("#{@filename}.taus" + sim_id_suffix, 'w')
-    node_utilities_file = File.open("#{@filename}.node_utilities" + sim_id_suffix, 'w')
-    conjoint_utilities_file = File.open("#{@filename}.conjoint_utilities" + sim_id_suffix, 'w') 
-
     # Some initial output
     if debug?
       puts "Beginning simulation with #{@nodes.length} nodes."
@@ -426,12 +403,23 @@ class Simulator
         # We're only really interested in tracking one node, node 0
         interesting_node = @nodes.find { |n| n.node_id==0 }
 
-        # Print out the utility and tau associated with each possible node.
-        interesting_node.print_taus taus_file
-        interesting_node.print_total_utilities node_utilities_file
+        # This output generates long data files, for use with R.
 
-        # Just print the cumulative conjoint utility so far
-        interesting_node.print_cumulative_conjoint_utility conjoint_utilities_file
+        # Output the tau values associated with each possible node.
+        @taus_file.print "#{@sim_id} #{@timestep} "
+        interesting_node.print_taus @taus_file
+        @taus_file.puts
+
+        # Output the utility values obtained from each possible node.
+        @node_utilities_file.print "#{@sim_id} #{@timestep} "
+        interesting_node.print_total_utilities @node_utilities_file
+        @node_utilities_file.puts
+
+        # Output the cumulative conjoint utility so far
+        @conjoint_utilities_file.print "#{@sim_id} #{@timestep} "
+        interesting_node.print_cumulative_conjoint_utility @conjoint_utilities_file
+        @conjoint_utilities_file.puts
+
       end
     end
 
