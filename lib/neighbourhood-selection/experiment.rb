@@ -30,9 +30,9 @@ class Experiment
       end
     end
 
-    # Should we generate graphs upon completion of the experiment?
-    # This requires R to be available and the rinruby gem to be installed.
-    @generate_graphs = (@CONFIG[:generate_graphs] or true)
+    # Should we actually run experiments, or assume they've been run already and
+    # the data is present?
+    @run_experiments = (@CONFIG[:run_experiments] or true)
 
     # Should we print debugging output?
     @debug = (@CONFIG[:debug] or false)
@@ -82,7 +82,7 @@ class Experiment
 
   # Run a particular experimental variant.
   # If no variant config is given, the vanilla scenario will be run.
-  def run_variant variant_name="", variant_config=Hash.new
+  def run_variant variant_name="", variant_config=Hash.new, run_experiments, generate_graphs
 
     # Was the filename overridden in the variant config?
     if variant_config[:filename_prefix]
@@ -94,48 +94,59 @@ class Experiment
     # Where to put and what to to call this variant's results files:
     variant_filename_prefix = @results_dir + "/" + @filename_prefix + "-" + variant_filename_prefix
 
-    # Open files
-    taus_file = File.open("#{variant_filename_prefix}.taus", 'w')
-    node_utilities_file = File.open("#{variant_filename_prefix}.node_utilities", 'w')
-    conjoint_utilities_file = File.open("#{variant_filename_prefix}.conjoint_utilities", 'w')
+    # Actual filenames to use
+    taus_filename = "#{variant_filename_prefix}.taus"
+    node_utilities_filename = "#{variant_filename_prefix}.node_utilities"
+    conjoint_utilities_filename = "#{variant_filename_prefix}.conjoint_utilities"
 
-    # For now, experiments are conducted in series.
-    # TODO: It would be nice if there was something more clever here that could
-    # parallelise them.
-    #
-    # Loop through them here:
-    for trial in 0..@num_trials-1
-      if debug?
-        puts "Trial #{trial} starting."
-      end
+    # We might not need to actually run the experiments, if for example, we've
+    # just been asked to recreate the graphs.
+    if run_experiments
 
-      # Create simulator object
-      sim = Simulator.new @scenario_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
+      # Open files
+      taus_file = File.open(taus_filename, 'w')
+      node_utilities_file = File.open(node_utilities_filename, 'w')
+      conjoint_utilities_file = File.open(conjoint_utilities_filename, 'w')
 
-      # If this is the first trial, we should first create column headers for
-      # the output files.
+      # For now, experiments are conducted in series.
+      # TODO: It would be nice if there was something more clever here that could
+      # parallelise them.
       #
-      # This is done here since we have to know how many nodes were specified in
-      # the scenario, hence a simulator must have been created using that
-      # configuration.
-      # TODO: I don't like this being here, it feels hacky. Suggestions welcome.
-      if trial == 0
-        taus_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
-        node_utilities_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
-        conjoint_utilities_file.puts "Trial Timestep Utility"
+      # Loop through them here:
+      for trial in 0..@num_trials-1
+        if debug?
+          puts "Trial #{trial} starting."
+        end
+
+        # Create simulator object
+        sim = Simulator.new @scenario_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
+
+        # If this is the first trial, we should first create column headers for
+        # the output files.
+        #
+        # This is done here since we have to know how many nodes were specified in
+        # the scenario, hence a simulator must have been created using that
+        # configuration.
+        # TODO: I don't like this being here, it feels hacky. Suggestions welcome.
+        if trial == 0
+          taus_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
+          node_utilities_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
+          conjoint_utilities_file.puts "Trial Timestep Utility"
+        end
+
+        sim.run
+
+        if debug?
+          puts "--> Trial #{trial} finished."
+        end
       end
 
-      sim.run
+      # Close files
+      taus_file.close
+      node_utilities_file.close
+      conjoint_utilities_file.close
 
-      if debug?
-        puts "--> Trial #{trial} finished."
-      end
     end
-
-    # Close files
-    taus_file.close
-    node_utilities_file.close
-    conjoint_utilities_file.close
 
 
     # Generate variant-specific graph, if requested.
@@ -143,29 +154,32 @@ class Experiment
     #   - factor: trial number
     #   - integer: timestep
     #   - numeric: conjoint utility value
-    if @generate_graphs
+    if generate_graphs
       graph_title = "Conjoint Utility (Individual Runs): #{@scenario_name}"
       if variant_name
         graph_title = graph_title + "-" + variant_name.to_s
       end
 
-      Experiment_Graph.new( conjoint_utilities_file.path,
-                            "#{conjoint_utilities_file.path}.pdf",
+      Experiment_Graph.new( conjoint_utilities_filename,
+                            "#{conjoint_utilities_filename}.pdf",
                             graph_title,
                             ["factor", "integer", "numeric"],
-                            (variant_config[:max_conjoint_utility] or 8000))
+                            variant_config[:max_conjoint_utility])
     end
 
   end
 
 
   # Run this experiment, or set of experimental variants
-  def run
+  def run run_experiments=true, generate_graphs=true
+
+    # TODO: DRY!
+
     if @CONFIG[:scenario_variants]
       @CONFIG[:scenario_variants].each do |variant_name, variant_config|
 
         # Run the experiment itself
-        run_variant variant_name, variant_config
+        run_variant variant_name, variant_config, run_experiments, generate_graphs
 
         if debug?
           puts "Experimental variant #{variant_filename_prefix} finished."
@@ -174,7 +188,7 @@ class Experiment
       end
     else
       # No variants specified, just run the vanilla scenario
-      run_variant
+      run_variant "", Hash.new, run_experiments, generate_graphs
 
       if debug?
         puts "Experiment finished."
@@ -183,7 +197,7 @@ class Experiment
     end
 
     # Generate cross-variant comparison graphs, if requested.
-    if @generate_graphs
+    if generate_graphs
       # TODO: Generate graphs here to compare variants.
     end
 

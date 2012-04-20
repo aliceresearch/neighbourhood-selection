@@ -20,6 +20,8 @@ command :run do |c|
 
   c.description = "Run a simulation."
   c.option '--config <filename>', String, 'Use the specified configuration file instead of the default.'
+  c.option '--noexperiments', "Don't actually run the experiments, just generate the graphs."
+  c.option '--nographs', "Don't generate any graphs after running the experiments."
 
   c.action do |args, options|
 
@@ -35,14 +37,14 @@ command :run do |c|
     # 'config/experiment.yml'
     #
     # Create the simulation itself:
-    if options.file
+    if options.config
       experiment = Experiment.new experiment_name, options.file
     else
       experiment = Experiment.new experiment_name
     end
 
     # Run the experiment using the config given.
-    experiment.run
+    experiment.run !options.noexperiments, !options.nographs
 
   end
 end
