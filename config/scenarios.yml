@@ -30,7 +30,7 @@ test:
     #0: broadcast
 
   # Should we output debugging information about the simulation or the nodes?
-  debug: true
+  debug: false
   node_debug: false
 
   # We can define events, which occur at the given time and can either be the
@@ -544,7 +544,7 @@ complex1:
 
   filename_suffix: step
 
-  debug: true
+  debug: false
 
 
 complex2:
@@ -712,4 +712,4 @@ complex2:
 
   filename_suffix: step
 
-  debug: true
+  debug: false

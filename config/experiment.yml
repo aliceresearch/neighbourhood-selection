@@ -4,7 +4,14 @@ testexperiment:
   results_dir: results/test-experiments
   scenario: test
   num_trials: 2
-  debug: true
+
+  #generate_graphs: true
+  #max_conjoint_utility: 8000
+
+  # Should we output debugging information about the experiment?
+  # Note that simulation and node debugging info is controlled in the scenario
+  # configuration file.
+  debug: false
 
   # Define your scenario variants to test here.  Results will be indexed with a
   # filename component matching the name of the variant.
@@ -41,7 +48,7 @@ testexperiment:
 complex1:
   scenario: complex1
   num_trials: 30
-  debug: true
+  debug: false
   results_dir: results/dynamics-sudden/complex1
 
   scenario_variants:
@@ -62,7 +69,7 @@ complex1:
 complex2:
   scenario: complex2
   num_trials: 30
-  debug: true
+  debug: false
   results_dir: results/dynamics-sudden/complex2
 
   scenario_variants:
