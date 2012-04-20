@@ -1,6 +1,7 @@
 require "yaml" # For parsing the configuration.
 require "fileutils" # For recursively creating directories.
 
+require "neighbourhood-selection/experiment_graph"
 require "neighbourhood-selection/simulator"
 
 class Experiment
@@ -28,6 +29,10 @@ class Experiment
         config[:node_strategies] = Hash.transform_values_to_symbols(config[:node_strategies])
       end
     end
+
+    # Should we generate graphs upon completion of the experiment?
+    # This requires R to be available and the rinruby gem to be installed.
+    @generate_graphs = (@CONFIG[:generate_graphs] or true)
 
     # Should we print debugging output?
     @debug = (@CONFIG[:debug] or false)
@@ -77,7 +82,14 @@ class Experiment
 
   # Run a particular experimental variant.
   # If no variant config is given, the vanilla scenario will be run.
-  def run_variant variant_filename_prefix="", variant_config=Hash.new
+  def run_variant variant_name="", variant_config=Hash.new
+
+    # Was the filename overridden in the variant config?
+    if variant_config[:filename_prefix]
+      variant_filename_prefix = variant_config[:filename_prefix]
+    else
+      variant_filename_prefix = variant_name.to_s
+    end
 
     # Where to put and what to to call this variant's results files:
     variant_filename_prefix = @results_dir + "/" + @filename_prefix + "-" + variant_filename_prefix
@@ -125,6 +137,25 @@ class Experiment
     node_utilities_file.close
     conjoint_utilities_file.close
 
+
+    # Generate variant-specific graph, if requested.
+    # The column types are:
+    #   - factor: trial number
+    #   - integer: timestep
+    #   - numeric: conjoint utility value
+    if @generate_graphs
+      graph_title = "Conjoint Utility (Individual Runs): #{@scenario_name}"
+      if variant_name
+        graph_title = graph_title + "-" + variant_name.to_s
+      end
+
+      Experiment_Graph.new( conjoint_utilities_file.path,
+                            "#{conjoint_utilities_file.path}.pdf",
+                            graph_title,
+                            ["factor", "integer", "numeric"],
+                            (variant_config[:max_conjoint_utility] or 8000))
+    end
+
   end
 
 
@@ -133,15 +164,8 @@ class Experiment
     if @CONFIG[:scenario_variants]
       @CONFIG[:scenario_variants].each do |variant_name, variant_config|
 
-        # Was the filename overridden in the variant config?
-        if variant_config[:filename_prefix]
-          variant_filename_prefix = variant_config[:filename_prefix]
-        else
-          variant_filename_prefix = variant_name.to_s
-        end
-
         # Run the experiment itself
-        run_variant variant_filename_prefix, variant_config
+        run_variant variant_name, variant_config
 
         if debug?
           puts "Experimental variant #{variant_filename_prefix} finished."
@@ -149,13 +173,18 @@ class Experiment
 
       end
     else
-        # No variants specified, just run the vanilla scenario
-        run_variant
+      # No variants specified, just run the vanilla scenario
+      run_variant
 
-        if debug?
-          puts "Experiment finished."
-        end
+      if debug?
+        puts "Experiment finished."
+      end
 
+    end
+
+    # Generate cross-variant comparison graphs, if requested.
+    if @generate_graphs
+      # TODO: Generate graphs here to compare variants.
     end
 
   end
