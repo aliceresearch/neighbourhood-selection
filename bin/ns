@@ -22,6 +22,7 @@ command :run do |c|
   c.option '--config <filename>', String, 'Use the specified configuration file instead of the default.'
   c.option '--noexperiments', "Don't actually run the experiments, just generate the graphs."
   c.option '--nographs', "Don't generate any graphs after running the experiments."
+  c.option '--nographtitles', "Don't add titles to the generated graphs. Has no effect if --nographs is also given."
 
   c.action do |args, options|
 
@@ -44,7 +45,7 @@ command :run do |c|
     end
 
     # Run the experiment using the config given.
-    experiment.run !options.noexperiments, !options.nographs
+    experiment.run !options.noexperiments, !options.nographs, !options.nographtitles
 
   end
 end

@@ -82,7 +82,7 @@ class Experiment
 
   # Run a particular experimental variant.
   # If no variant config is given, the vanilla scenario will be run.
-  def run_variant variant_name="", variant_config=Hash.new, run_experiments, generate_graphs
+  def run_variant variant_name="", variant_config=Hash.new, run_experiments, generate_graphs, generate_graph_titles
 
     # Was the filename overridden in the variant config?
     if variant_config[:filename_prefix]
@@ -155,9 +155,15 @@ class Experiment
     #   - integer: timestep
     #   - numeric: conjoint utility value
     if generate_graphs
-      graph_title = "Conjoint Utility (Individual Runs): #{@scenario_name}"
-      if variant_name
-        graph_title = graph_title + "-" + variant_name.to_s
+
+      if generate_graph_titles
+        graph_title = "Conjoint Utility: #{@scenario_name}"
+        if variant_name
+          graph_title = graph_title + "-" + variant_name.to_s
+        end
+      else
+        graph_title = ""
+      end
 
       begin
         # Create a grapher object for this dataset
@@ -185,7 +191,7 @@ class Experiment
 
 
   # Run this experiment, or set of experimental variants
-  def run run_experiments=true, generate_graphs=true
+  def run run_experiments=true, generate_graphs=true, generate_graph_titles=true
 
     # TODO: DRY!
 
@@ -193,7 +199,7 @@ class Experiment
       @CONFIG[:scenario_variants].each do |variant_name, variant_config|
 
         # Run the experiment itself
-        run_variant variant_name, variant_config, run_experiments, generate_graphs
+        run_variant variant_name, variant_config, run_experiments, generate_graphs, generate_graph_titles
 
         if debug?
           puts "Experimental variant #{variant_filename_prefix} finished."
@@ -202,7 +208,7 @@ class Experiment
       end
     else
       # No variants specified, just run the vanilla scenario
-      run_variant "", Hash.new, run_experiments, generate_graphs
+      run_variant "", Hash.new, run_experiments, generate_graphs, generate_graph_titles
 
       if debug?
         puts "Experiment finished."
