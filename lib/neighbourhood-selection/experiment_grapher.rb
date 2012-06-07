@@ -30,6 +30,25 @@ class Experiment_Grapher
     @r.eval "data <- read.table( '#{datafile}', header = TRUE,
                                   colClasses = c(#{column_types}))"
 
+    # Here you can set theming options to be applied to all plots.
+    # This must be done manually though in the relevant plotting method below.
+    # This can be very simple, empty or as complex as you like.
+    # Here's an example which makes lots of things transparent:
+    #
+    #@default_theme = "opts(panel.background = theme_rect(fill = 'transparent', colour = NA),
+                      #panel.grid.minor = theme_blank(), 
+                      #panel.grid.major = theme_blank(),
+                      #plot.background = theme_rect(fill = 'transparent',colour = NA))"
+    #
+    # And here's a really simple example that just uses a predefined theme in
+    # its entirety:
+    #
+    # @default_theme = "theme_blank()"
+    #
+    # For more information about themes, check out http://sape.inf.usi.ch/quick-reference/ggplot2/themes
+    #
+    @default_theme = "theme_bw()"
+
   end
 
 
@@ -46,7 +65,8 @@ class Experiment_Grapher
     plotstring = "qplot(Timestep, Utility, data = data,
                    colour=Trial, geom = c('point', 'line'),
                    main = '#{title}') +
-                   opts( legend.position = 'none' )"
+                   opts( legend.position = 'none' ) +
+                   #{@default_theme}"
     if y_max
       plotstring += "+ ylim(0, #{y_max})"
     end
