@@ -90,12 +90,10 @@ class Experiment_Grapher
     @r.eval "pdf('#{pdffile}')"
 
     # The plot command string.
-
     plotstring = "ggplot(data, aes(x=Timestep, y=Utility, main = '#{title}')) +
                   #{@default_theme} +
                   stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, colour = 'grey', alpha = 0.7, geom = c('errorbar')) +
                   stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, color = 'black', size = 1.0, geom = c('point', 'line'))"
-                  #opts(legend.position = 'none')
 
     if y_max
       plotstring += "+ ylim(0, #{y_max})"
