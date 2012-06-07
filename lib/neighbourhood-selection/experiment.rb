@@ -1,7 +1,7 @@
 require "yaml" # For parsing the configuration.
 require "fileutils" # For recursively creating directories.
 
-require "neighbourhood-selection/experiment_graph"
+require "neighbourhood-selection/experiment_grapher"
 require "neighbourhood-selection/simulator"
 
 class Experiment
@@ -158,13 +158,27 @@ class Experiment
       graph_title = "Conjoint Utility (Individual Runs): #{@scenario_name}"
       if variant_name
         graph_title = graph_title + "-" + variant_name.to_s
+
+      begin
+        # Create a grapher object for this dataset
+        grapher = Experiment_Grapher.new(conjoint_utilities_filename,
+                                         ["factor", "integer", "numeric"])
+
+        # Produce a graph showing each individual run
+        grapher.create_runs_graph("#{conjoint_utilities_filename}-individual-runs.pdf",
+                                  graph_title,
+                                  variant_config[:max_conjoint_utility])
+
+        # Produce a graph showing the mean and standard deviation between runs
+        grapher.create_summary_graph("#{conjoint_utilities_filename}-summary.pdf",
+                                     graph_title,
+                                     variant_config[:max_conjoint_utility])
+
+      rescue Exception => e  
+        # Things can go wrong when using R and reading from files
+        puts e.message
       end
 
-      Experiment_Graph.new( conjoint_utilities_filename,
-                            "#{conjoint_utilities_filename}.pdf",
-                            graph_title,
-                            ["factor", "integer", "numeric"],
-                            variant_config[:max_conjoint_utility])
     end
 
   end
