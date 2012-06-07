@@ -63,10 +63,10 @@ class Experiment_Grapher
 
     # The plot command string.
     plotstring = "qplot(Timestep, Utility, data = data,
-                   colour=Trial, geom = c('point', 'line'),
-                   main = '#{title}') +
-                   opts( legend.position = 'none' ) +
-                   #{@default_theme}"
+                   colour=Trial, geom = c('point', 'line')) +
+                   #{@default_theme} +
+                   opts(title = '#{title}') +
+                   opts(legend.position = 'none')"
     if y_max
       plotstring += "+ ylim(0, #{y_max})"
     end
@@ -90,8 +90,9 @@ class Experiment_Grapher
     @r.eval "pdf('#{pdffile}')"
 
     # The plot command string.
-    plotstring = "ggplot(data, aes(x=Timestep, y=Utility, main = '#{title}')) +
+    plotstring = "ggplot(data, aes(x=Timestep, y=Utility)) +
                   #{@default_theme} +
+                  opts(title = '#{title}') +
                   stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, colour = 'grey', alpha = 0.7, geom = c('errorbar')) +
                   stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, color = 'black', size = 1.0, geom = c('point', 'line'))"
 
