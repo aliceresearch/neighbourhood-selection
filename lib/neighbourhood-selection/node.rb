@@ -143,6 +143,15 @@ class Node
     }
   end
 
+  # Return the total instantaneous conjoint utility accumulated by this node
+  # from all other nodes.
+  def last_conjoint_utility
+    # @total_node_utilities is a hash with the key being the node_id and the
+    # value being the associated utility value. So, we just need to sum the
+    # values.
+    @last_node_utilities.values.inject(:+)
+  end
+
   # Return the total cumulative conjoint utility so far accumulated by this
   # node.
   def cumulative_conjoint_utility

@@ -6,39 +6,53 @@ module Ensemble_Meta_Strategies
   #
   #
   # You can make use of the following base selections strategy methods:
-  #   broadcast
-  #   smooth
-  #   step
+  # broadcast smooth step
   #
   # Each one will return a Set containing the nodes selected by that strategy,
   # given the current knowledge of the node.
   #
   # Other things you have access to:
   #
-  #  @possible_nodes
-  #    This is a Set of all the possible Nodes to choose from.  This may change
-  #    between method calls, if the network topology changes, for example.
+  #  @possible_nodes This is a Set of all the possible Nodes to choose from.
+  #  This may change between method calls, if the network topology changes, for
+  #  example.
   #
-  #  @taus
-  #    This is an array, indexed by Node.node_id, which contains the current tau
-  #    value (i.e. pheromone level) on the link between this node and the node
-  #    with the given node_id. These values will almost certainly regularly
-  #    change, including based on your actions.
+  #  @taus This is an array, indexed by Node.node_id, which contains the current
+  #  tau value (i.e. pheromone level) on the link between this node and the node
+  #  with the given node_id. These values will almost certainly regularly
+  #  change, including based on your actions.
   #
-  #  @random
-  #    This is an object of type Random. You should use it for ALL your random
-  #    number generating needs. Typically, get a random number by calling
-  #    @random.rand(max). In order to ensure that experiments are repeatable, do
-  #    not get random numbers any other way!
+  #  @random This is an object of type Random. You should use it for ALL your
+  #  random number generating needs. Typically, get a random number by calling
+  #  @random.rand(max). In order to ensure that experiments are repeatable, do
+  #  not get random numbers any other way!
   #
-  #  debug?
-  #    This is a method that returns a boolean and tells you whether or not the
-  #    user wants to see debugging output. You should check if it is true before
-  #    outputting anything. You might want to use the method
-  #    print_selected_nodes to give helpful debugging output, as shown in the
-  #    example.
+  #  debug?  This is a method that returns a boolean and tells you whether or
+  #  not the user wants to see debugging output. You should check if it is true
+  #  before outputting anything. You might want to use the method
+  #  print_selected_nodes to give helpful debugging output, as shown in the
+  #  example.
   #
   #
+  #  @last_node_utilities
+  #    This is an array indexed by node_id which tells you the most recent
+  #    (instantaneous) utility gained by this node from the node with the given
+  #    id.
+  #
+  #  @total_node_utilities
+  #    This is an array indexed by node_id which tells you the cumulative (over
+  #    time) utility gained by this node from the node with the given id.
+  #
+  #  last_conjoint_utility
+  #    A method which returns the total instantaneous conjoint utility
+  #    accumulated by this node from all other nodes.
+  #
+  #  cumulative_conjoint_utility
+  #     A method which returns the total cumulative conjoint utility so far
+  #     accumulated by this node.
+  
+
+
 
   # This is a simple example meta-strategy.
   def ensemble_example
