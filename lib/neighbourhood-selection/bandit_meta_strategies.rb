@@ -76,4 +76,78 @@ module Bandit_Meta_Strategies
     selected_nodes
   end
 
+
+  # Basic epsilon greedy bandit solving strategy
+  def bandit_epsilon_greedy epsilon=0.1
+
+    # We need to keep track of the learnt expected payoff from each arm
+    # (strategy), along with the number of times we used it.
+    #
+    # To reduce the amount of data stored, but also to try to maintain accuracy,
+    # we store the total payoff from each strategy so far, plus the number of
+    # times it has been used. This has the disadvantage that the averages have
+    # to be calculated on the fly, but we don't lose precision and also don't
+    # have to store every data point.
+    # 
+    # To simplify the implementation, when finding the best known strategy
+    # below, we break any ties by just selecting the first strategy in the tie
+    # (this is max_by's default behaviour). Therefore, as suggested in Sutton
+    # and Barto's book, we initialise the average payoffs to very
+    # small random numbers (instead of zero) to avoid an initial bias based on
+    # the ordering of the strategies in this hash.
+    #
+    unless @strategies
+      # Initialise, when we are starting up and have no information.
+      @strategies = { broadcast: {count: 0, payoff: @random.rand / 1000000},
+                      smooth: {count: 0, payoff: @random.rand / 1000000},
+                      step: {count: 0, payoff: @random.rand / 1000000}
+                    }
+    else
+      # Check what we used last time, and update our knowledge based on its
+      # performance.
+      unless @last_used_strategy
+        raise "Error: Bandit strategy had no information on previously chosen strategy."
+      else
+        @strategies[@last_used_strategy][:count] += 1
+        @strategies[@last_used_strategy][:payoff] += last_conjoint_utility
+
+        #if debug?
+          puts "Added utility of #{last_conjoint_utility} to #{@last_used_strategy}"
+        #end
+
+      end
+
+    end
+
+    # With probability 1-epsilon, we select the best known strategy so far 
+    if @random.rand > epsilon
+      # This will only return one strategy, even in the event of ties. See the
+      # above comment for an explanation of how this is mitigated.
+      #
+      # max_by returns an array of the form [key, value], so we take [0] to get
+      # just a symbol for the selected strategy.
+      selected_strategy = @strategies.max_by { |k, v| v[:payoff]/v[:count] }[0]
+    else
+      # Select a strategy at random from the list
+      selected_strategy = @strategies.keys.sample(random: @random)
+    end
+
+    # Get the set of selected nodes from the selected strategy.
+    selected_nodes = self.method(selected_strategy).call
+
+    # Record that we used this strategy last.
+    @last_used_strategy = selected_strategy
+    
+
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
+    puts "Used #{selected_strategy} strategy."
+
+    # Return the set of selected nodes
+    selected_nodes
+  end
+
 end
