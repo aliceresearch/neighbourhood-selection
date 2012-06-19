@@ -33,7 +33,6 @@ module Ensemble_Meta_Strategies
   #  print_selected_nodes to give helpful debugging output, as shown in the
   #  example.
   #
-  #
   #  @last_node_utilities
   #    This is an array indexed by node_id which tells you the most recent
   #    (instantaneous) utility gained by this node from the node with the given

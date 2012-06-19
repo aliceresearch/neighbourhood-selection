@@ -38,7 +38,22 @@ module Bandit_Meta_Strategies
   #    print_selected_nodes to give helpful debugging output, as shown in the
   #    example.
   #
+  #  @last_node_utilities
+  #    This is an array indexed by node_id which tells you the most recent
+  #    (instantaneous) utility gained by this node from the node with the given
+  #    id.
   #
+  #  @total_node_utilities
+  #    This is an array indexed by node_id which tells you the cumulative (over
+  #    time) utility gained by this node from the node with the given id.
+  #
+  #  last_conjoint_utility
+  #    A method which returns the total instantaneous conjoint utility
+  #    accumulated by this node from all other nodes.
+  #
+  #  cumulative_conjoint_utility
+  #     A method which returns the total cumulative conjoint utility so far
+  #     accumulated by this node.
 
   # This is a simple example meta-strategy.
   def bandit_example
