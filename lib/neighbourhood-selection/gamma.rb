@@ -51,7 +51,7 @@ class Gamma
         u1 = @random.rand
 
         if not ((1e-7 < u1) and (u1 < 0.9999999))
-          continue
+          next
         end
 
         u2 = 1.0 - @random.rand
