@@ -153,6 +153,7 @@ stepbest:
 scenario12:
   scenario: scenario12
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario12
 
   scenario_variants:
 
@@ -171,6 +172,7 @@ scenario12:
 scenario13:
   scenario: scenario13
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario13
 
   scenario_variants:
 
@@ -189,6 +191,7 @@ scenario13:
 scenario21:
   scenario: scenario21
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario21
 
   scenario_variants:
 
@@ -207,6 +210,7 @@ scenario21:
 scenario23:
   scenario: scenario23
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario23
 
   scenario_variants:
 
@@ -225,6 +229,7 @@ scenario23:
 scenario31:
   scenario: scenario31
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario31
 
   scenario_variants:
 
@@ -243,6 +248,7 @@ scenario31:
 scenario32:
   scenario: scenario32
   num_trials: 30
+  results_dir: results/dynamics-sudden/scenario32
 
   scenario_variants:
 
