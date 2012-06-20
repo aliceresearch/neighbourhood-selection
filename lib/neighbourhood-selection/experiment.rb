@@ -180,7 +180,7 @@ class Experiment
                                      graph_title,
                                      variant_config[:max_conjoint_utility])
 
-      rescue Exception => e  
+      rescue Exception => e
         # Things can go wrong when using R and reading from files
         puts e.message
       end
