@@ -93,8 +93,8 @@ class Experiment_Grapher
     plotstring = "ggplot(data, aes(x=Timestep, y=Utility)) +
                   #{@default_theme} +
                   opts(title = '#{title}') +
-                  stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, colour = 'grey', alpha = 0.7, geom = c('errorbar')) +
-                  stat_summary(fun.y = 'mean', fun.ymin = min, fun.ymax = max, color = 'black', size = 1.0, geom = c('point', 'line'))"
+                  stat_summary(fun.ymin = function(x) mean(x)-sd(x), fun.ymax = function(x) mean(x)+sd(x), colour = 'blue', alpha = 0.6, geom = c('ribbon')) +
+                  stat_summary(fun.y = mean, color = 'blue', size = 1.0, geom = c('line'))"
 
     if y_max
       plotstring += "+ ylim(0, #{y_max})"
