@@ -65,8 +65,7 @@ class Experiment_Grapher
     plotstring = "qplot(Timestep, Utility, data = data,
                    colour=Variant, geom = c('point', 'line')) +
                    #{@default_theme} +
-                   opts(title = '#{title}') +
-                   opts(legend.position = 'none')"
+                   opts(title = '#{title}')"
     if y_min and y_max
       plotstring += "+ coord_cartesian(ylim = c(#{y_min}, #{y_max}))"
       plotstring += "+ scale_y_continuous(breaks=seq(#{y_min},#{y_max},#{((y_max-y_min)/10).round(-3)}))"
