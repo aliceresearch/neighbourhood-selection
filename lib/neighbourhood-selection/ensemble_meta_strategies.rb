@@ -63,7 +63,60 @@ module Ensemble_Meta_Strategies
     else
       selected_nodes = smooth
     end
+        
+    
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
 
+    # Return the set of selected nodes
+    selected_nodes
+  end
+  
+  def ensemble_intersect_smooth_step
+    
+    selected_nodes = smooth & step    
+    
+    
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
+
+    # Return the set of selected nodes
+    selected_nodes
+  end
+
+  def ensemble_union_smooth_step
+    
+    selected_nodes = smooth | step    
+    
+    
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
+
+    # Return the set of selected nodes
+    selected_nodes
+  end
+  
+  def ensemble_weighted_sum
+    unless @weight_smooth
+      @weight_smooth = 0
+    end
+    
+    unless @weight_step
+      @weight_step = 0
+    end  
+    
+    selected_nodes = smooth | step    
+    
+    
     # Bit of debugging output - only output for one node, which is the one we
     # are typically interested in.
     if self.debug? and @node_id == 0

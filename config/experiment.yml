@@ -69,6 +69,14 @@ complex1:
       node_strategies:
         0: bandit_epsilon_greedy
 
+    ensemble_intersect_smooth_step:
+      node_strategies:
+        0: ensemble_intersect_smooth_step 
+
+    ensemble_union_smooth_step:
+      node_strategies:
+        0: ensemble_union_smooth_step
+
 complex2:
   scenario: complex2
   num_trials: 30
@@ -93,13 +101,22 @@ complex2:
       node_strategies:
         0: bandit_epsilon_greedy
 
+    ensemble_intersect_smooth_step:
+      node_strategies:
+        0: ensemble_intersect_smooth_step 
+
+    ensemble_union_smooth_step:
+      node_strategies:
+        0: ensemble_union_smooth_step
+        
 # Static scenario experiments
 
 broadcastbest:
   scenario: scenario1
   num_trials: 30
   results_dir: results/baseline-scenarios/1-broadcast-best
-
+  max_conjoint_utility: 8000
+      
   scenario_variants:
 
     broadcast:
@@ -122,7 +139,8 @@ smoothbest:
   scenario: scenario2
   num_trials: 30
   results_dir: results/baseline-scenarios/2-smooth-best
-
+  max_conjoint_utility: 8000
+  
   scenario_variants:
 
     broadcast:
@@ -145,7 +163,8 @@ stepbest:
   scenario: scenario3
   num_trials: 30
   results_dir: results/baseline-scenarios/3-step-best
-
+  max_conjoint_utility: 8000
+  
   scenario_variants:
 
     broadcast:
@@ -185,6 +204,7 @@ scenario12:
     step:
       node_strategies:
         0: step
+                
 
     epsilon_greedy:
       node_strategies:
@@ -238,6 +258,7 @@ scenario21:
 
 scenario23:
   scenario: scenario23
+  results_dir: results/dynamic-scenarios/23-smooth-step
   num_trials: 30
   results_dir: results/dynamics-sudden/scenario23
 
@@ -254,6 +275,14 @@ scenario23:
     step:
       node_strategies:
         0: step
+    
+    ensemble_intersect_smooth_step:
+      node_strategies:
+        0: ensemble_intersect_smooth_step 
+
+    ensemble_union_smooth_step:
+      node_strategies:
+        0: ensemble_union_smooth_step
 
     epsilon_greedy:
       node_strategies:
