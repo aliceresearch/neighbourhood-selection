@@ -162,7 +162,6 @@ class Node
   end
 
   # Print the total cumulative conjoint utility so far accumulated by this node.
-  # The value is put(sed) on its own line.
   #
   # Optionally, specify a file object to print to as a parameter. If none is
   # given, output goes to STDOUT.
