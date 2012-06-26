@@ -111,9 +111,9 @@ module Bandit_Meta_Strategies
         @strategies[@last_used_strategy][:count] += 1
         @strategies[@last_used_strategy][:payoff] += last_conjoint_utility
 
-        #if debug?
+        if debug?
           puts "Added utility of #{last_conjoint_utility} to #{@last_used_strategy}"
-        #end
+        end
 
       end
 
@@ -142,9 +142,9 @@ module Bandit_Meta_Strategies
     # Bit of debugging output - only output for one node, which is the one we
     # are typically interested in.
     if self.debug? and @node_id == 0
+      puts "Used #{selected_strategy} strategy."
       print_selected_nodes 0, selected_nodes
     end
-    puts "Used #{selected_strategy} strategy."
 
     # Return the set of selected nodes
     selected_nodes
