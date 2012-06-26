@@ -29,12 +29,19 @@ class Simulator
     # We also need to process some string values into symbols.
     @SCENARIO_CONFIG[:node_strategies] = Hash.transform_values_to_symbols(@SCENARIO_CONFIG[:node_strategies])
 
+    # Make a deep local copy of the experiment config
+    @config = Marshal.load(Marshal.dump(experiment_config))
+
     # Merge simulation configuration and experiment configuration.
     # Experiment configuration takes precedence, and will overwrite scenario
     # "defaults", if specified. We assume that the config has already been
     # "cleaned" to use symbols.
-    @config = experiment_config
     @config.deep_merge(@SCENARIO_CONFIG)
+
+    # TODO: It would probably make much more sense to do this above bit in
+    # reverse, i.e. by rewriting a custom deep_merge method which merges the
+    # experiment config into the locally created scenario config. Then we
+    # wouldn't need to rely on that gem either.
 
     # Should we print debugging output?
     @debug = @config[:debug]
