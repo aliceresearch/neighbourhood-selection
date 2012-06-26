@@ -157,7 +157,7 @@ class Experiment
 
     end
 
-    # Generate per-variant and cross-variant comparison graphs, if requested.
+    # Generate cross-variant summary comparison graphs, if requested.
     #
     # The column types for conjoint utility values are:
     #   - factor: variant name
@@ -166,38 +166,30 @@ class Experiment
     #   - numeric: conjoint utility value
     if generate_graphs
 
-      @CONFIG[:scenario_variants].each do |variant_name, variant_config|
-
-        if generate_graph_titles
-          graph_title = "Conjoint Utility: #{@scenario_name}"
-          if variant_name
-            graph_title = graph_title + "-" + variant_name.to_s
-          end
-        else
-          graph_title = ""
-        end
-
-        begin
-          # Create a grapher object for this dataset
-          grapher = Experiment_Grapher.new(@conjoint_utilities_filename,
-                                           ["factor", "factor", "integer", "numeric"])
-
-          # Produce a graph showing each individual run
-          grapher.create_runs_graph("#{@conjoint_utilities_filename}-individual-runs.pdf",
-                                    graph_title, y_min, y_max)
-
-          # Produce a graph showing the mean and standard deviation between runs
-          grapher.create_summary_graph("#{@conjoint_utilities_filename}-summary.pdf",
-                                       graph_title, y_min, y_max)
-
-        rescue Exception => e
-          # Things can go wrong when using R and reading from files
-          puts e.message
-        end
-
+      if generate_graph_titles
+        graph_title = "Conjoint Utility: #{@scenario_name.capitalize}"
+      else
+        graph_title = ""
       end
 
-      # TODO: Generate graphs here to compare variants.
+      begin
+        # Create a grapher object for this dataset
+        grapher = Experiment_Grapher.new(@conjoint_utilities_filename,
+                                         ["factor", "factor", "integer", "numeric"])
+
+        # Produce a graph showing each individual run
+        grapher.create_runs_graph("#{@conjoint_utilities_filename}-individual-runs.pdf",
+                                  graph_title, y_min, y_max)
+
+        # Produce a graph showing the mean and standard deviation between runs
+        grapher.create_summary_graph("#{@conjoint_utilities_filename}-summary.pdf",
+                                     graph_title, y_min, y_max)
+
+      rescue Exception => e
+        # Things can go wrong when using R and reading from files
+        puts e.message
+      end
+
     end
 
   end

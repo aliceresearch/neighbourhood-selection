@@ -6,8 +6,8 @@ testexperiment:
   num_trials: 2
 
   #generate_graphs: true
-  min_conjoint_utility: -8000
-  max_conjoint_utility: 1000
+  #min_conjoint_utility: -8000
+  #max_conjoint_utility: 1000
 
   # Should we output debugging information about the experiment?
   # Note that simulation and node debugging info is controlled in the scenario

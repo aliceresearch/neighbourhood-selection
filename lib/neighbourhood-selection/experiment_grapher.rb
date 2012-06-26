@@ -63,7 +63,7 @@ class Experiment_Grapher
 
     # The plot command string.
     plotstring = "qplot(Timestep, Utility, data = data,
-                   colour=Trial, geom = c('point', 'line')) +
+                   colour=Variant, geom = c('point', 'line')) +
                    #{@default_theme} +
                    opts(title = '#{title}') +
                    opts(legend.position = 'none')"
@@ -91,11 +91,11 @@ class Experiment_Grapher
     @r.eval "pdf('#{pdffile}')"
 
     # The plot command string.
-    plotstring = "ggplot(data, aes(x=Timestep, y=Utility)) +
+    plotstring = "ggplot(data, aes(x=Timestep, y=Utility, colour=Variant)) +
                   #{@default_theme} +
                   opts(title = '#{title}') +
-                  stat_summary(fun.ymin = function(x) mean(x)-sd(x), fun.ymax = function(x) mean(x)+sd(x), colour = 'blue', alpha = 0.6, geom = c('ribbon')) +
-                  stat_summary(fun.y = mean, color = 'blue', size = 1.0, geom = c('line'))"
+                  stat_summary(fun.ymin = function(x) mean(x)-sd(x), fun.ymax = function(x) mean(x)+sd(x), alpha = 0.6, geom = c('ribbon')) +
+                  stat_summary(fun.y = mean, size = 1.0, geom = c('line'))"
 
     if y_min and y_max
       plotstring += "+ coord_cartesian(ylim = c(#{y_min}, #{y_max}))"
