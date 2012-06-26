@@ -82,7 +82,7 @@ class Experiment
 
   # Run a particular experimental variant.
   # If no variant config is given, the vanilla scenario will be run.
-  def run_variant variant_name="", variant_config=Hash.new, run_experiments, generate_graphs, generate_graph_titles
+  def run_variant variant_name="", variant_config=Hash.new, run_experiments, generate_graphs, generate_graph_titles, y_min, y_max
 
     # Was the filename overridden in the variant config?
     if variant_config[:filename_prefix]
@@ -172,13 +172,11 @@ class Experiment
 
         # Produce a graph showing each individual run
         grapher.create_runs_graph("#{conjoint_utilities_filename}-individual-runs.pdf",
-                                  graph_title,
-                                  variant_config[:max_conjoint_utility])
+                                  graph_title, y_min, y_max)
 
         # Produce a graph showing the mean and standard deviation between runs
         grapher.create_summary_graph("#{conjoint_utilities_filename}-summary.pdf",
-                                     graph_title,
-                                     variant_config[:max_conjoint_utility])
+                                     graph_title, y_min, y_max)
 
       rescue Exception => e
         # Things can go wrong when using R and reading from files
@@ -195,11 +193,15 @@ class Experiment
 
     # TODO: DRY!
 
+    # Any experiment-wide configurations we need to pass through to the variants?
+    y_min = @CONFIG[:min_conjoint_utility]
+    y_max = @CONFIG[:max_conjoint_utility]
+
     if @CONFIG[:scenario_variants]
       @CONFIG[:scenario_variants].each do |variant_name, variant_config|
 
         # Run the experiment itself
-        run_variant variant_name, variant_config, run_experiments, generate_graphs, generate_graph_titles
+        run_variant variant_name, variant_config, run_experiments, generate_graphs, generate_graph_titles, y_min, y_max
 
         if debug?
           puts "Experimental variant #{variant_filename_prefix} finished."
@@ -208,7 +210,7 @@ class Experiment
       end
     else
       # No variants specified, just run the vanilla scenario
-      run_variant "", Hash.new, run_experiments, generate_graphs, generate_graph_titles
+      run_variant "", Hash.new, run_experiments, generate_graphs, generate_graph_titles, y_min, y_max
 
       if debug?
         puts "Experiment finished."

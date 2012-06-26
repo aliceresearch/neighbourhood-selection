@@ -54,7 +54,7 @@ class Experiment_Grapher
 
   # Create a graph from the loaded dataset showing values for every run as an
   # individual series.
-  def create_runs_graph pdffile, title, y_max=nil
+  def create_runs_graph pdffile, title, y_min=nil, y_max=nil
 
     print "Generating individual runs graph for dataset #{@dataset_name}... "
 
@@ -67,8 +67,9 @@ class Experiment_Grapher
                    #{@default_theme} +
                    opts(title = '#{title}') +
                    opts(legend.position = 'none')"
-    if y_max
-      plotstring += "+ ylim(0, #{y_max})"
+    if y_min and y_max
+      plotstring += "+ coord_cartesian(ylim = c(#{y_min}, #{y_max}))"
+      plotstring += "+ scale_y_continuous(breaks=seq(#{y_min},#{y_max},#{((y_max-y_min)/10).round(-3)}))"
     end
 
     @r.eval plotstring
@@ -82,7 +83,7 @@ class Experiment_Grapher
 
   # Create a graph from the loaded dataset showing mean and standard deviation
   # between runs.
-  def create_summary_graph pdffile, title, y_max=nil
+  def create_summary_graph pdffile, title, y_min=nil, y_max=nil
 
     print "Generating summary graph for dataset #{@dataset_name}... "
 
@@ -96,8 +97,9 @@ class Experiment_Grapher
                   stat_summary(fun.ymin = function(x) mean(x)-sd(x), fun.ymax = function(x) mean(x)+sd(x), colour = 'blue', alpha = 0.6, geom = c('ribbon')) +
                   stat_summary(fun.y = mean, color = 'blue', size = 1.0, geom = c('line'))"
 
-    if y_max
-      plotstring += "+ ylim(0, #{y_max})"
+    if y_min and y_max
+      plotstring += "+ coord_cartesian(ylim = c(#{y_min}, #{y_max}))"
+      plotstring += "+ scale_y_continuous(breaks=seq(#{y_min},#{y_max},#{((y_max-y_min)/10).round(-3)}))"
     end
 
     @r.eval plotstring
