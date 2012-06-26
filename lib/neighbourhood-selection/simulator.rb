@@ -13,13 +13,13 @@ class Simulator
 
   # Create a new Simulator object and associated requirements.
   #
-  def initialize sim_name, sim_id, scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, random_seed, experiment_config=Hash.new
+  def initialize scenario_name, variant_name, sim_id, scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, random_seed, experiment_config=Hash.new
 
     # Load simulation scenario specific configuration
-    @SCENARIO_CONFIG = YAML.load_file(scenario_config_file)[sim_name]
+    @SCENARIO_CONFIG = YAML.load_file(scenario_config_file)[scenario_name]
 
     unless @SCENARIO_CONFIG
-      raise "No configuration found for scenario #{sim_name}."
+      raise "No configuration found for scenario #{scenario_name}."
     end
 
     # YAML files are parsed with keys as Strings rather than symbols, which we
@@ -40,7 +40,8 @@ class Simulator
     @debug = @config[:debug]
 
     # Set this simulation's name and ID. This tells us we have initialized it.
-    @sim_name = sim_name
+    @scenario_name = scenario_name
+    @variant_name = variant_name
     @sim_id = sim_id
 
     # Initialise timestep to be zero
@@ -373,7 +374,7 @@ class Simulator
 
   def run
 
-    unless @sim_name
+    unless @scenario_name
       raise "Tried to run a simulation which has not yet been initialized."
     end
 
@@ -407,17 +408,17 @@ class Simulator
         # This output generates long data files, for use with R.
 
         # Output the tau values associated with each possible node.
-        @taus_file.print "#{@sim_id} #{@timestep} "
+        @taus_file.print "#{@variant_name} #{@sim_id} #{@timestep} "
         interesting_node.print_taus @taus_file
         @taus_file.puts
 
         # Output the utility values obtained from each possible node.
-        @node_utilities_file.print "#{@sim_id} #{@timestep} "
+        @node_utilities_file.print "#{@variant_name} #{@sim_id} #{@timestep} "
         interesting_node.print_total_utilities @node_utilities_file
         @node_utilities_file.puts
 
         # Output the cumulative conjoint utility so far
-        @conjoint_utilities_file.print "#{@sim_id} #{@timestep} "
+        @conjoint_utilities_file.print "#{@variant_name} #{@sim_id} #{@timestep} "
         interesting_node.print_cumulative_conjoint_utility @conjoint_utilities_file
         @conjoint_utilities_file.puts
 

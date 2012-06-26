@@ -119,7 +119,7 @@ class Experiment
         end
 
         # Create simulator object
-        sim = Simulator.new @scenario_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
+        sim = Simulator.new @scenario_name, variant_name, trial, @scenario_config_file, taus_file, node_utilities_file, conjoint_utilities_file, @seeds[trial], variant_config
 
         # If this is the first trial, we should first create column headers for
         # the output files.
@@ -129,9 +129,9 @@ class Experiment
         # configuration.
         # TODO: I don't like this being here, it feels hacky. Suggestions welcome.
         if trial == 0
-          taus_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
-          node_utilities_file.puts "Trial Timestep #{sim.list_nodes_except 0}"
-          conjoint_utilities_file.puts "Trial Timestep Utility"
+          taus_file.puts "Variant Trial Timestep #{sim.list_nodes_except 0}"
+          node_utilities_file.puts "Variant Trial Timestep #{sim.list_nodes_except 0}"
+          conjoint_utilities_file.puts "Variant Trial Timestep Utility"
         end
 
         sim.run
@@ -151,6 +151,7 @@ class Experiment
 
     # Generate variant-specific graph, if requested.
     # The column types are:
+    #   - factor: variant name
     #   - factor: trial number
     #   - integer: timestep
     #   - numeric: conjoint utility value
@@ -168,7 +169,7 @@ class Experiment
       begin
         # Create a grapher object for this dataset
         grapher = Experiment_Grapher.new(conjoint_utilities_filename,
-                                         ["factor", "integer", "numeric"])
+                                         ["factor", "factor", "integer", "numeric"])
 
         # Produce a graph showing each individual run
         grapher.create_runs_graph("#{conjoint_utilities_filename}-individual-runs.pdf",
