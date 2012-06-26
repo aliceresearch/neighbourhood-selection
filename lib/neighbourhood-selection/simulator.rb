@@ -414,6 +414,22 @@ class Simulator
 
         # This output generates long data files, for use with R.
 
+        # TODO: This bit is so hacky it's sad. Suggestions welcome.
+        #
+        # First create column headers for the output files, if this is the first
+        # time we write to the file.
+        if @taus_file.size == 0
+          @taus_file.puts "Variant Trial Timestep #{list_nodes_except 0}"
+        end
+
+        if @node_utilities_file.size == 0
+          @node_utilities_file.puts "Variant Trial Timestep #{list_nodes_except 0}"
+        end
+
+        if @conjoint_utilities_file.size == 0
+          @conjoint_utilities_file.puts "Variant Trial Timestep Utility"
+        end
+
         # Output the tau values associated with each possible node.
         @taus_file.print "#{@variant_name} #{@sim_id} #{@timestep} "
         interesting_node.print_taus @taus_file
