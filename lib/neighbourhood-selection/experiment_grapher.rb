@@ -62,8 +62,7 @@ class Experiment_Grapher
     @r.eval "pdf('#{pdffile}')"
 
     # The plot command string.
-    plotstring = "qplot(Timestep, Utility, data = data,
-                   colour=Variant, geom = c('point', 'line')) +
+    plotstring = "qplot(Timestep, Utility, data = data, colour=Variant, geom = c('point', 'line')) +
                    #{@default_theme} +
                    opts(title = '#{title}')"
     if y_min and y_max
