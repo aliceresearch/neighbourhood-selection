@@ -27,6 +27,7 @@ command :run do |c|
   c.option '--noexperiments', "Don't actually run the experiments, just generate the graphs."
   c.option '--nographs', "Don't generate any graphs after running the experiments."
   c.option '--nographtitles', "Don't add titles to the generated graphs. Has no effect if --nographs is also given."
+  c.option '--nostats', "Don't generate summary statistics at the end of the simulation."
 
   c.action do |args, options|
 
@@ -59,5 +60,5 @@ def create_and_run_experiment experiment_name, options
     end
 
     # Run the experiment using the config given.
-    experiment.run !options.noexperiments, !options.nographs, !options.nographtitles
+    experiment.run !options.noexperiments, !options.nographs, !options.nographtitles, !options.nostats
 end

@@ -120,7 +120,7 @@ class Experiment
 
 
   # Run this experiment, or set of experimental variants
-  def run run_experiments=true, generate_graphs=true, generate_graph_titles=true
+  def run run_experiments=true, generate_graphs=true, generate_graph_titles=true, generate_stats=true
 
     # Ensure there's always at least a default variant config
     unless @CONFIG[:scenario_variants]
