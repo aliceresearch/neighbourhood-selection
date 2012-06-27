@@ -17,25 +17,36 @@ program :description, "A simulation tool for the relevant neighbourhood selectio
 default_command :help
 
 command :run do |c|
-  c.syntax = "ns run <sim_name>
+  c.syntax = "ns run <experiment_name> [experiment2_name] [experiment3_name] ...
 
-    Run a simulation with the configuration sim_name."
+    Run the experiment(s) with the configuration experiment_name."
 
-  c.description = "Run a simulation."
-  c.option '--config <filename>', String, 'Use the specified configuration file instead of the default.'
+  c.description = "Run one or more experiments. The experiments must be defined in the experiment configuration file."
+
+  c.option '--config <filename>', String, 'Use the specified experiment configuration file instead of the default.'
   c.option '--noexperiments', "Don't actually run the experiments, just generate the graphs."
   c.option '--nographs', "Don't generate any graphs after running the experiments."
   c.option '--nographtitles', "Don't add titles to the generated graphs. Has no effect if --nographs is also given."
 
   c.action do |args, options|
 
-    # Set this to be the maintainer to pull packages for.
-    if args[0]
-      experiment_name = args[0]
-    else
-      warn "You must specify an experiment name."
+    unless args[0]
+      warn "You must specify at least one experiment name."
       exit
     end
+
+    # Run each experiment in turn.
+    args.each do |experiment_name|
+      create_and_run_experiment experiment_name, options
+    end
+
+  end
+
+end
+
+
+# Actually create an experiment object, and run it.
+def create_and_run_experiment experiment_name, options
 
     # If we've been passed a --config <filename>, then use that instead of
     # 'config/experiment.yml'
@@ -49,6 +60,4 @@ command :run do |c|
 
     # Run the experiment using the config given.
     experiment.run !options.noexperiments, !options.nographs, !options.nographtitles
-
-  end
 end
