@@ -2,7 +2,7 @@ require "rinruby"
 
 # TODO: This whole thing could do with some better error handling.
 
-class Experiment_Grapher
+class Experiment_Analyser
 
   def initialize datafile, column_types
 
@@ -79,6 +79,7 @@ class Experiment_Grapher
 
   end
 
+
   # Create a graph from the loaded dataset showing mean and standard deviation
   # between runs.
   def create_summary_graph pdffile, title, y_min=nil, y_max=nil
@@ -106,6 +107,44 @@ class Experiment_Grapher
     @r.eval "dev.off()"
 
     puts "done!"
+
+  end
+
+
+  # Create some summary statistics from these data and output them to a file.
+  def create_summary_stats outfilename
+
+    # Create a data frame with just the final values in it
+    # (i.e. throw out all timesteps but the last one:
+    @r.eval "subset(data, subset=(Timestep>=max(Timestep))) -> data.final"
+
+    # Using this new slimmed down data frame, calculate the mean and standard
+    # deviations for each variant.
+    @r.eval "tapply(data.final$Utility, data.final$Variant, mean) -> means"
+    @r.eval "tapply(data.final$Utility, data.final$Variant, sd) -> sds"
+
+    # Format for returning to ruby
+    @r.eval "names(means) -> variants"
+    @r.eval "matrix(means) -> means"
+    @r.eval "matrix(sds) -> sds"
+
+    File.open(outfilename, "w") do |outfile|
+      outfile.puts "Final utility values for #{@dataset_name}, by variant:"
+      outfile.puts "---------------------------------------------------------"
+      outfile.puts "Variant".center(20," ") + "\t\t   Mean   \t   SD"
+      outfile.puts "---------------------------------------------------------"
+      @r.variants.each_with_index do |name, i|
+        outfile.puts name.center(20," ") + "\t\t" + "%0.3f" % @r.means[i,0] + "\t" + i.to_s + "%0.3f" % @r.sds[i,0]
+      end
+      outfile.puts "---------------------------------------------------------"
+    end
+
+    #print "Means:    "
+    #@r.means.each { |name| print name + " " }
+    #p @r.means
+
+    #puts "SDs:"
+    #p @r.sds
 
   end
 

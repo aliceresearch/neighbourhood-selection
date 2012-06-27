@@ -1,7 +1,7 @@
 require "yaml" # For parsing the configuration.
 require "fileutils" # For recursively creating directories.
 
-require "neighbourhood-selection/experiment_grapher"
+require "neighbourhood-selection/experiment_analyser"
 require "neighbourhood-selection/simulator"
 
 class Experiment
@@ -164,26 +164,33 @@ class Experiment
     #   - factor: trial number
     #   - integer: timestep
     #   - numeric: conjoint utility value
-    if generate_graphs
-
-      if generate_graph_titles
-        graph_title = "Conjoint Utility: #{@scenario_name.capitalize}"
-      else
-        graph_title = ""
-      end
+    if generate_graphs or generate_stats
 
       begin
-        # Create a grapher object for this dataset
-        grapher = Experiment_Grapher.new(@conjoint_utilities_filename,
-                                         ["factor", "factor", "integer", "numeric"])
+        # Create an analyser object for this dataset
+        analyser = Experiment_Analyser.new(@conjoint_utilities_filename,
+                                           ["factor", "factor", "integer", "numeric"])
 
-        # Produce a graph showing each individual run
-        grapher.create_runs_graph("#{@conjoint_utilities_filename}-individual-runs.pdf",
-                                  graph_title, y_min, y_max)
+        if generate_graphs
+          if generate_graph_titles
+            graph_title = "Conjoint Utility: #{@scenario_name.capitalize}"
+          else
+            graph_title = ""
+          end
 
-        # Produce a graph showing the mean and standard deviation between runs
-        grapher.create_summary_graph("#{@conjoint_utilities_filename}-summary.pdf",
-                                     graph_title, y_min, y_max)
+          # Produce a graph showing each individual run
+          analyser.create_runs_graph("#{@conjoint_utilities_filename}-individual-runs.pdf",
+                                    graph_title, y_min, y_max)
+
+          # Produce a graph showing the mean and standard deviation between runs
+          analyser.create_summary_graph("#{@conjoint_utilities_filename}-summary.pdf",
+                                       graph_title, y_min, y_max)
+        end
+
+        if generate_stats
+          # Produce some summary statistics.
+          analyser.create_summary_stats("#{@conjoint_utilities_filename}-stats.txt")
+        end
 
       rescue Exception => e
         # Things can go wrong when using R and reading from files
