@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
-require 'commander/import'
 require 'neighbourhood-selection'
+
+# You must require commander (actually highline) after rinruby, otherwise we get
+# weird piping errors in R.
+require 'commander/import'
 
 # Specify version number here
 VERSION = '0.0.1'
