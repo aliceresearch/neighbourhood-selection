@@ -106,6 +106,7 @@ module Ensemble_Meta_Strategies
   end
   
   def ensemble_weighted_sum
+    # To do. Right now the result is a union.
     unless @weight_smooth
       @weight_smooth = 0
     end
@@ -115,6 +116,43 @@ module Ensemble_Meta_Strategies
     end  
     
     selected_nodes = smooth | step    
+    
+    
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      print_selected_nodes 0, selected_nodes
+    end
+
+    # Return the set of selected nodes
+    selected_nodes
+  end
+  
+  def ensemble_majority_vote
+      
+    selected_nodes = Set.new
+    
+    vote_count = Array.new(@possible_nodes.size) {|i| 0}
+    broadcast.each {|n|
+      vote_count[n.node_id - 1] = vote_count[n.node_id - 1] + 1
+    }
+    
+    smooth.each {|n|
+      vote_count[n.node_id - 1] = vote_count[n.node_id - 1] + 1
+    }
+    
+    step.each {|n|
+      vote_count[n.node_id - 1] = vote_count[n.node_id - 1] + 1
+    }
+    
+    vote_count.each_index {|id|
+      if vote_count[id] >= 2
+        @possible_nodes.each {|n|
+            if n.node_id == id + 1
+              selected_nodes.add n
+        }
+      end
+    }
     
     
     # Bit of debugging output - only output for one node, which is the one we
