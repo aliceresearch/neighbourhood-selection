@@ -1,43 +1,60 @@
 require "set"
-require "neighbourhood-selection/base_selection_strategies"
-require "neighbourhood-selection/bandit_meta_strategies"
-require "neighbourhood-selection/ensemble_meta_strategies"
+
+# Self-awareness engines
+require "neighbourhood-selection/self_awareness/self_awareness_engine"
+
+# Self-expression engine
+require "neighbourhood-selection/self_expression/self_expression_engine"
 
 
 class Node
 
-  # Mix in the basic strategies: broadcast, smooth and step
-  include Base_Selection_Strategies
-  include Ensemble_Meta_Strategies
-  include Bandit_Meta_Strategies
-
-
   attr_reader :node_id
-  attr_reader :taus
 
   # Should this node output debugging info?
   attr_reader :debug
 
   def initialize id, communication_strategy, connected, debug=false
-    @possible_nodes = {}
-    @taus = {}
-    @last_node_utilities = {}
-    @total_node_utilities = {}
+
+    # Basic node information and capabilities.
     @node_id = id
     @random = Random.new @node_id
     @debug = debug
     @connected = connected
 
-    # Pheromone parameters
-    @initial_tau = 1.0
-    @evaporation_rate = 0.01
-    @delta = 1
+    # Create this node's self-awareness engine.
+    @self_awareness = Self_Awareness_Engine.new(@random, debug?)
 
-    # Utility parameters
-    @weights = { :beta => 0.5, :gamma => 0.5 }
+    # Enable capabilities in the self-awareness engine.
+    #
+    # The order of capabilities matters! Specifically, they will receive
+    # messages in the order in which they are enabled. For example, if you rely
+    # on some updated model in one capability for use in another, for the model
+    # to be up to date when accessed, the capability that updates the model
+    # should precede the capability which uses it.
+    #
+    # TODO: This should be configurable from config files, as
+    # communication_strategy is.
+    @self_awareness.enable_capability :Multi_attribute_utility
+    @self_awareness.enable_capability :Network
+    @self_awareness.enable_capability :Network_Pheromones
 
-    # The communication strategy is set in the configuration and passed in.
-    @communication_strategy = communication_strategy
+    # The self-expression engines that this node uses.
+    # This is a hash of engine objects.
+    # TODO: Engines should be registered through methods.
+    @self_expression = Self_Expression_Engine.new(@random, debug?)
+    
+    # Tell the self-expression engine where it can look for its self-awareness
+    # information, i.e. the self-awareness engine.
+    @self_expression.set_self_awareness_source @self_awareness
+
+    # Enable capabilities of the self-expression engine.
+    @self_expression.enable_capability "Base_Selection_Strategies"
+    @self_expression.enable_capability "Ensemble_Meta_Strategies"
+    @self_expression.enable_capability "Bandit_Meta_Strategies"
+
+    # Set the actual strategy, from those capabilities enabled, to use.
+    @self_expression.set_strategy communication_strategy
 
     if debug?
       print "Node #{@node_id} created: "
@@ -48,67 +65,57 @@ class Node
   end
 
 
-  # This provides the first part of a node's behaviour during one timestep.
+  # The remainder of the node class is concerned with how to deal with incoming
+  # messages (from the simulator in this case).
+  #
+  # For convenience in this simulation, these are named in the order in which
+  # the messages are received in a simulation time step.
+
+  # The first of these messages is an update of the node's connectivity, which
+  # is the first message received during one timestep.
   # The method receives a list of the possible nodes, with which this node could
-  # communicate. It updates its local knowledge of that and selects the relevant
-  # neighbourhood from them. It returns this selected relevant neighbourhood.
-  def step1 new_possible_nodes
-    update_possible_nodes new_possible_nodes
+  # communicate. It passes this information to the self-awareness engine(s),
+  # which update the local knowledge.
+  # 
+  # It then calls the self-expression engine to select the relevant
+  # neighbourhood. It returns this selected relevant neighbourhood back to the
+  # simulator.
 
-    @taus.keep_if { |i, t|
-      @possible_nodes.find { |n| n.node_id == i }
-    }
+  def update_neighbourhood new_possible_nodes
 
-    @possible_nodes.each { |b|
-      if !@taus[b.node_id]
-        @taus[b.node_id] = @initial_tau
-      end
-    }
+    # Pass on this message to the self-awareness engine.
+    @self_awareness.notify __method__, new_possible_nodes
 
-    relevant_neighbourhood = select_relevant_neighbourhood
+    # TODO: In an asynchronous framework, this would represent a notification
+    # (as we do in the framework through redis) to the "self-expression engine",
+    # that something has changed an might need acting upon. Whether it does is
+    # up to the self-expression engine. In this case, the self-expression engine
+    # would do the communicating, not just the selecting, and we would have a
+    # similar construct to the one above for self-awareness engines.
+    # 
+    # We would pass the hash of self-awareness engines as a parameter
+    # (reference) to the self-expression engine(s), to do what it needs to.
+
+    # However, in this synchronous simulator, we know that this method must
+    # return a set of selected nodes, so we do the following.
+    relevant_neighbourhood =
+      @self_expression.select_relevant_neighbourhood
+
   end
 
-  # Update the node's knowledge of its possible nodes.
-  def update_possible_nodes new_possible_nodes
-    @possible_nodes = new_possible_nodes
-  end
 
-
-  # In this step, we update our knowledge, based on the benefits and costs
+  # This is the second message type received by the node. Again we send the
+  # information received to the self-awareness engine(s) to update our
+  # knowledge, e.g. the pheromone values, based on the benefits and costs
   # derived.
-  def step2 benefits_and_costs
+  def update_benefits_and_costs benefits_and_costs
 
-    # Update this iteration's and total utility for each possible node
-    @possible_nodes.each do |n|
-      if benefits_and_costs[n.node_id] then
-        @last_node_utilities[n.node_id] = utility benefits_and_costs[n.node_id]
-        if @total_node_utilities[n.node_id]
-          @total_node_utilities[n.node_id] += utility benefits_and_costs[n.node_id]
-        else
-          @total_node_utilities[n.node_id] = utility benefits_and_costs[n.node_id]
-        end
-      else
-        @last_node_utilities[n.node_id] = 0
-      end
-    end
+    # Pass on this message to the self-awareness engine.
+    @self_awareness.notify __method__, benefits_and_costs
 
-
-    # Evaporate all tau values
-    @possible_nodes.each { |n|
-      @taus[n.node_id]= (1-@evaporation_rate) * @taus[n.node_id]
-    }
-
-    # Update the tau values based on the observed benefits and costs
-    benefits_and_costs.each { |i, values|
-      if (utility values) > 0
-        @taus[i] = @taus[i] + @delta
-      end
-    }
   end
 
-  def utility values
-    @weights[:beta] * values[:beta] - @weights[:gamma] * values[:gamma]
-  end
+
 
 
   # Print the node ID and the current values in @taus.
@@ -121,7 +128,7 @@ class Node
   #
   def print_taus destination=STDOUT
     destination.print @node_id
-    @taus.each { |i,t|
+    @self_awareness.retrieve(:taus).each { |i,t|
       # puts "node_id #{i} tau #{t}"
       destination.print " #{t}"
     }
@@ -137,29 +144,12 @@ class Node
   #
   def print_total_utilities destination=STDOUT
     destination.print @node_id
-    @total_node_utilities.each { |i,u|
+    @self_awareness.retrieve(:total_node_utilities).each { |i,u|
       # puts "node_id #{i} tau #{u}"
       destination.print " #{u}"
     }
   end
 
-  # Return the total instantaneous conjoint utility accumulated by this node
-  # from all other nodes.
-  def last_conjoint_utility
-    # @total_node_utilities is a hash with the key being the node_id and the
-    # value being the associated utility value. So, we just need to sum the
-    # values.
-    @last_node_utilities.values.inject(:+)
-  end
-
-  # Return the total cumulative conjoint utility so far accumulated by this
-  # node.
-  def cumulative_conjoint_utility
-    # @total_node_utilities is a hash with the key being the node_id and the
-    # value being the associated utility value. So, we just need to sum the
-    # values.
-    @total_node_utilities.values.inject(:+)
-  end
 
   # Print the total cumulative conjoint utility so far accumulated by this node.
   #
@@ -167,25 +157,11 @@ class Node
   # given, output goes to STDOUT.
   #
   def print_cumulative_conjoint_utility destination=STDOUT
-    destination.print cumulative_conjoint_utility
+    destination.print @self_awareness.retrieve(:cumulative_conjoint_utility)
   end
 
-  # Select and return the relevant neighbourhood.
-  #
-  # The strategy currently in @communication_strategy must exist as a method.
-  def select_relevant_neighbourhood
-    begin
-      method(@communication_strategy).call
-    rescue => e
-      warn "Warning: The neighbourhood selection strategy generated an exception of type #{e.class}."
-      warn "--> #{e}"
-      warn "--> This node will select *no nodes*."
-      Set.new
-    end
-  end
 
   def print_selected_nodes id, selected_nodes
-
     if @node_id == 0
       print "Node #{id} selected:"
       selected_nodes.each { |n|
@@ -193,11 +169,13 @@ class Node
       }
       puts
     end
-
   end
 
 
   # Is this node connected to the network, or not?
+  #
+  # TODO: Is this an underlying fact, or does it belong in the network
+  # self-awareness capability module?
   def is_connected?
     @connected
   end

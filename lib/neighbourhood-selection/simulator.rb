@@ -254,7 +254,8 @@ class Simulator
   # Run one discrete time step of the simulation.
   #
   # First, this triggers any events for this time step, then it iterates through
-  # each node, running their step1 and step2 methods.
+  # each node, running their update_neighbourhood (step1) and
+  # update_benefits_and_costs (step2) methods.
   #
   # Typically, this means they set their relevant neighbourhood based on
   # previous knowledge (e.g. tau values), communicate and sample benefits and
@@ -289,19 +290,19 @@ class Simulator
       # responsible for determining this based on its prior knowledge (e.g. tau
       # values).
       #
-      neighbourhood = node.step1 possible_nodes_for node
+      selected_neighbourhood = node.update_neighbourhood possible_nodes_for node
 
       # Next we determine the benefit and cost associated with each edge in the
       # relevant neighbourhood of the node.
       benefits_and_costs = { }
-      neighbourhood.each do |neighbour|
+      selected_neighbourhood.each do |neighbour|
         benefits_and_costs[neighbour.node_id] =
           get_benefits_and_costs node.node_id, neighbour.node_id
       end
 
       # In step 2, we tell the node what the benefits and costs were, so that it
       # can update its knowledge of each node (e.g. tau values).
-      node.step2 benefits_and_costs
+      node.update_benefits_and_costs benefits_and_costs
 
     end
 

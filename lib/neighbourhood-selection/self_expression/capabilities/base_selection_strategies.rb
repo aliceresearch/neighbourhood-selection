@@ -1,8 +1,9 @@
 module Base_Selection_Strategies
 
-
   def broadcast
-    selected_nodes = Set.new @possible_nodes
+    # To access self-awareness knowledge, pass the requested method name to
+    # self.awareness:
+    selected_nodes = Set.new self.awareness.retrieve(:possible_nodes)
 
     # Bit of debugging output
     if self.debug? and @node_id == 0
@@ -15,9 +16,9 @@ module Base_Selection_Strategies
 
   def smooth
     selected_nodes = Set.new
-    max_tau = @taus.values.max
-    @possible_nodes.each {|n|
-      p = (1 + @taus[n.node_id])/max_tau
+    max_tau = self.awareness.retrieve(:taus).values.max
+    self.awareness.retrieve(:possible_nodes).each {|n|
+      p = (1 + self.awareness.retrieve(:taus)[n.node_id])/max_tau
       if @random.rand < p
         selected_nodes.add n
       end
@@ -39,8 +40,8 @@ module Base_Selection_Strategies
     @step_eta = 0.01
 
     selected_nodes = Set.new
-    @possible_nodes.each {|n|
-      if @taus[n.node_id] > @step_epsilon
+    self.awareness.retrieve(:possible_nodes).each {|n|
+      if self.awareness.retrieve(:taus)[n.node_id] > @step_epsilon
         selected_nodes.add n
       else
         if @random.rand < @step_eta
