@@ -1,3 +1,8 @@
+# TODO: When passing through methods to capabilities, force them to be prefixed
+# with either notify_ or retrieve_, by adding that to message_name and knowledge
+# in this class.
+
+
 require 'neighbourhood-selection/self_awareness/self_awareness_capability'
 
 class Self_Awareness_Engine
@@ -53,7 +58,9 @@ class Self_Awareness_Engine
 
   # Retrieve a particular piece of knowledge from the self-awareness
   # capabilities, if it exists there.
-  def retrieve knowledge
+  #
+  # TODO: Extend index to multiple arbitrary parameters.
+  def retrieve knowledge, index=nil
 
     if debug?
       puts "Looking up knowledge #{knowledge}:"
@@ -67,7 +74,14 @@ class Self_Awareness_Engine
         if debug?
           puts "Found!"
         end
-        return capability.method(knowledge).call
+
+        # An index is optional
+        if index
+          return capability.method(knowledge).call index
+        else
+          return capability.method(knowledge).call
+        end
+
       else
         if debug?
           puts "Not found."

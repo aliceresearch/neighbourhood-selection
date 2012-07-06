@@ -49,8 +49,8 @@ module Bandit_Meta_Strategies
   #    outputting anything. You might want to use the method
   #    print_selected_nodes to give helpful debugging output, as shown in the
   #    example.
-  
-  
+
+
 
   # This is a simple example meta-strategy.
   def bandit_example
@@ -85,7 +85,7 @@ module Bandit_Meta_Strategies
     # times it has been used. This has the disadvantage that the averages have
     # to be calculated on the fly, but we don't lose precision and also don't
     # have to store every data point.
-    # 
+    #
     # To simplify the implementation, when finding the best known strategy
     # below, we break any ties by just selecting the first strategy in the tie
     # (this is max_by's default behaviour). Therefore, as suggested in Sutton
@@ -97,7 +97,8 @@ module Bandit_Meta_Strategies
       # Initialise, when we are starting up and have no information.
       @strategies = { broadcast: {count: 0, payoff: self.random.rand / 1000000},
                       smooth: {count: 0, payoff: self.random.rand / 1000000},
-                      step: {count: 0, payoff: self.random.rand / 1000000}
+                      step: {count: 0, payoff: self.random.rand / 1000000},
+                      ucb1: {count: 0, payoff: self.random.rand / 1000000}
                     }
     else
       # Check what we used last time, and update our knowledge based on its

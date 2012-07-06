@@ -38,18 +38,20 @@ class Node
     @self_awareness.enable_capability :Multi_attribute_utility
     @self_awareness.enable_capability :Network
     @self_awareness.enable_capability :Network_Pheromones
+    @self_awareness.enable_capability :Network_Cumulative_Rewards
 
     # The self-expression engines that this node uses.
     # This is a hash of engine objects.
     # TODO: Engines should be registered through methods.
     @self_expression = Self_Expression_Engine.new(@random, debug?)
-    
+
     # Tell the self-expression engine where it can look for its self-awareness
     # information, i.e. the self-awareness engine.
     @self_expression.set_self_awareness_source @self_awareness
 
     # Enable capabilities of the self-expression engine.
     @self_expression.enable_capability "Base_Selection_Strategies"
+    @self_expression.enable_capability "Bandit_Selection_Strategies"
     @self_expression.enable_capability "Ensemble_Meta_Strategies"
     @self_expression.enable_capability "Bandit_Meta_Strategies"
 
