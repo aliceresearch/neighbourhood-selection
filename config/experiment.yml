@@ -28,6 +28,10 @@ testexperiment:
       node_strategies:
         0: broadcast
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     smooth:
       node_strategies:
         0: smooth
@@ -66,6 +70,10 @@ complex1:
       node_strategies:
         0: step
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -97,6 +105,10 @@ complex2:
     step:
       node_strategies:
         0: step
+
+    ucb1:
+      node_strategies:
+        0: ucb1
 
     epsilon_greedy:
       node_strategies:
@@ -132,6 +144,10 @@ broadcastbest:
       node_strategies:
         0: step
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -156,6 +172,10 @@ smoothbest:
       node_strategies:
         0: step
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -179,6 +199,10 @@ stepbest:
     step:
       node_strategies:
         0: step
+
+    ucb1:
+      node_strategies:
+        0: ucb1
 
     epsilon_greedy:
       node_strategies:
@@ -207,6 +231,10 @@ scenario12:
         0: step
                 
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -230,6 +258,10 @@ scenario13:
       node_strategies:
         0: step
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -252,6 +284,10 @@ scenario21:
     step:
       node_strategies:
         0: step
+
+    ucb1:
+      node_strategies:
+        0: ucb1
 
     epsilon_greedy:
       node_strategies:
@@ -277,6 +313,10 @@ scenario23:
       node_strategies:
         0: step
     
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     ensemble_intersect_smooth_step:
       node_strategies:
         0: ensemble_intersect_smooth_step 
@@ -308,6 +348,10 @@ scenario31:
       node_strategies:
         0: step
 
+    ucb1:
+      node_strategies:
+        0: ucb1
+
     epsilon_greedy:
       node_strategies:
         0: bandit_epsilon_greedy
@@ -330,6 +374,10 @@ scenario32:
     step:
       node_strategies:
         0: step
+
+    ucb1:
+      node_strategies:
+        0: ucb1
 
     epsilon_greedy:
       node_strategies:
