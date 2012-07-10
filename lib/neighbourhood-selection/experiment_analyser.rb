@@ -134,7 +134,7 @@ class Experiment_Analyser
       outfile.puts "Variant".center(20," ") + "\t\t   Mean   \t   SD"
       outfile.puts "---------------------------------------------------------"
       @r.variants.each_with_index do |name, i|
-        outfile.puts name.center(20," ") + "\t\t" + "%0.3f" % @r.means[i,0] + "\t" + i.to_s + "%0.3f" % @r.sds[i,0]
+        outfile.puts name.center(20," ") + "\t\t" + "%0.3f" % @r.means[i,0] + "\t" + "%0.3f" % @r.sds[i,0]
       end
       outfile.puts "---------------------------------------------------------"
     end
