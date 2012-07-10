@@ -171,6 +171,11 @@ class Experiment
         analyser = Experiment_Analyser.new(@conjoint_utilities_filename,
                                            ["factor", "factor", "integer", "numeric"])
 
+        if generate_stats
+          # Produce some summary statistics.
+          analyser.create_summary_stats("#{@conjoint_utilities_filename}-stats.txt")
+        end
+
         if generate_graphs
           if generate_graph_titles
             graph_title = "Conjoint Utility: #{@scenario_name.capitalize}"
@@ -185,11 +190,6 @@ class Experiment
           # Produce a graph showing the mean and standard deviation between runs
           analyser.create_summary_graph("#{@conjoint_utilities_filename}-summary.pdf",
                                        graph_title, y_min, y_max)
-        end
-
-        if generate_stats
-          # Produce some summary statistics.
-          analyser.create_summary_stats("#{@conjoint_utilities_filename}-stats.txt")
         end
 
       rescue Exception => e
