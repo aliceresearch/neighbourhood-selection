@@ -52,15 +52,34 @@ class Self_Expression_Engine
 
   # Select which strategy from the enabled portfolio the engine will actually
   # use.
+  # new_strategy should be a hash containing at least :strategy => :method_name
+  # and optionally other parameters, such as :alpha => 0.1
   def set_strategy new_strategy
     # TODO: Some error checking here - check the method exists.
-    @selection_strategy = new_strategy
+    @selection_strategy = new_strategy[:strategy]
+
+    # TODO: Isolate these into the capabilities' container objects; see TODO
+    # above. This will permit parameter storing between strategy uses.
+    #
+    # Don't think this needs to be a deep copy, since we shouldn't be changing
+    # it in the self-expression engine anyway.
+    @strategy_parameters = new_strategy
+
+    # Make a deep local copy of the strategy parameters, to force the meta layer
+    # to notify us when it has changed them.
+    @strategy_parameters = Marshal.load(Marshal.dump(@strategy_parameters))
+
+    # Delete the name of the strategy itself, since we already used that to
+    # decide on the method to call.
+    @strategy_parameters.delete(:strategy)
   end
+
 
   # Wrapper method to access @self_awareness (i.e. with self.awareness)
   def awareness
     @self_awareness
   end
+
 
   # Select and return the relevant neighbourhood, according to the currently set
   # strategy.

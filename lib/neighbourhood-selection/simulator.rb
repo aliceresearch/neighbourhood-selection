@@ -148,7 +148,7 @@ class Simulator
       if strategies and strategies[i]
         strategy = strategies[i]
       else
-        strategy = :broadcast
+        strategy = {strategy: :broadcast}
       end
 
       # We initially start with every node connected. They will be disconnected

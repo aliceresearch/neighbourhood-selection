@@ -35,16 +35,16 @@ module Base_Selection_Strategies
 
   def step
 
-    # Default parameters - should probably set these in the configuration files.
-    @step_epsilon = 0.95
-    @step_eta = 0.01
+    # Default parameters - in case nothing was given in @strategy_parameters
+    step_epsilon = (@strategy_parameters[:step_epsilon] or 0.95)
+    step_eta = (@strategy_parameters[:step_eta] or 0.001)
 
     selected_nodes = Set.new
     self.awareness.retrieve(:possible_nodes).each {|n|
-      if self.awareness.retrieve(:taus)[n.node_id] > @step_epsilon
+      if self.awareness.retrieve(:taus)[n.node_id] > step_epsilon
         selected_nodes.add n
       else
-        if @random.rand < @step_eta
+        if @random.rand < step_eta
           selected_nodes.add n
         end
       end
