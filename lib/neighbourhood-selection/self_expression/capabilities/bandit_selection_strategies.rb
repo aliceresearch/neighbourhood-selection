@@ -74,4 +74,150 @@ module Bandit_Selection_Strategies
     selected_nodes
   end
 
+
+  def epsilon_greedy epsilon=0.1
+
+    # Keep track of the number of times we included each node
+    unless @selected_count
+      @selected_count = Hash.new(0)
+    end
+
+    selected_nodes = Set.new
+
+    # Compare each node as an arm against a phantom arm of inaction.
+    self.awareness.retrieve(:possible_nodes).each do |node|
+
+      # Initialisation phase: test this arm once.
+
+      if @selected_count[node.node_id] == 0
+        selected_nodes.add node
+        @selected_count[node.node_id] +=1
+        next
+      end
+
+      # We don't need to test the phantom arm, since its reward is always 0.
+
+      # Iterative phase:
+
+      average_node_reward = self.awareness.retrieve(:cumulative_rewards)[node.node_id] /
+        @selected_count[node.node_id]
+
+      # With probability 1-epsilon, we select the best known strategy so far 
+      if self.random.rand > epsilon
+
+        # Assume inaction gives a zero reward:
+        if average_node_reward > 0
+          selected_nodes.add node
+          @selected_count[node.node_id] += 1
+          if debug?
+            puts " -- CHOSE BEST STRATEGY: SELECTED"
+          end
+        else
+          if debug?
+            puts " -- CHOSE BEST STRATEGY: NOT SELECTED"
+          end
+        end
+
+      else
+
+        # Select a strategy at random from the list
+        if self.random.rand > 0.5
+          selected_nodes.add node
+          @selected_count[node.node_id] += 1
+          if debug?
+            puts " -- SELECTED AT RANDOM"
+          end
+        else
+          if debug?
+            puts " -- NOT SELECTED AT RANDOM"
+          end
+        end
+
+      end
+
+    end
+
+    # Return our final set
+    selected_nodes
+
+  end
+
+
+  #def probability_matching p_min=0.01
+
+    #selected_nodes = Set.new
+
+    ## Compare each node as an arm against a phantom arm of inaction.
+    #self.awareness.retrieve(:possible_nodes).each do |node|
+
+      ## Probability of choosing to include the node - in the two arm case when
+      ## one arm's average reward is always 0, this collapses down to the
+      ## following:
+      #s = p_min + (1 - (2 * p_min))
+
+      ## I don't understand this - how is it supposed to work with rewards that
+      ## can be negative?
+
+
+    #end
+
+  #end
+
+  def adaptive_pursuit p_min=0.1, beta=0.1
+
+    unless @adaptive_pursuit_node_probabilities
+      @adaptive_pursuit_node_probabilities = Hash.new(0.5)
+      @adaptive_pursuit_inaction_probabilities = Hash.new(0.5)
+      @init = true
+    end
+
+    # Calculated static value
+    p_max = 1 - p_min
+
+    selected_nodes = Set.new
+
+    # Compare each node as an arm against a phantom arm of inaction.
+    self.awareness.retrieve(:possible_nodes).each do |node|
+
+      # Initialisation phase: test this arm once.
+
+      if @init
+        selected_nodes.add node
+        next
+      end
+
+      # Iterative phase:
+
+      # Select the node based on the current probabilities:
+      if self.random.rand < @adaptive_pursuit_node_probabilities[node.node_id]
+        selected_nodes.add node
+      end
+
+      # Update probabilities for next time
+      if (self.awareness.retrieve(:cumulative_relaxed_rewards)[node.node_id] > 0)
+
+        @adaptive_pursuit_node_probabilities[node.node_id] +=
+          beta * (p_max - @adaptive_pursuit_node_probabilities[node.node_id])
+
+        @adaptive_pursuit_inaction_probabilities[node.node_id] +=
+          beta * (p_min - @adaptive_pursuit_inaction_probabilities[node.node_id])
+
+      else
+
+        @adaptive_pursuit_inaction_probabilities[node.node_id] +=
+          beta * (p_max - @adaptive_pursuit_inaction_probabilities[node.node_id])
+
+        @adaptive_pursuit_node_probabilities[node.node_id] +=
+          beta * (p_min - @adaptive_pursuit_node_probabilities[node.node_id])
+
+      end
+    end
+
+    # Don't initialise next time
+    @init = false
+
+    # Return our nodes
+    selected_nodes
+  end
+
 end
