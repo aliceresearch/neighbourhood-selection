@@ -37,6 +37,9 @@ class Self_Expression_Engine
     require "neighbourhood-selection/self_expression/capabilities/#{capability.downcase}"
     self.extend Module::const_get(capability)
 
+    # TODO: Make these sit in container objects, the same as with self-awareness
+    # capabilities.
+
     # Modules can include an initialize_capabilityname method
     if self.respond_to? "initialize_#{capability.downcase}"
       self.method("initialize_#{capability.downcase}").call
