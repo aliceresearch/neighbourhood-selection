@@ -39,6 +39,7 @@ class Node
     @self_awareness.enable_capability :Network
     @self_awareness.enable_capability :Network_Pheromones
     @self_awareness.enable_capability :Network_Cumulative_Rewards
+    @self_awareness.enable_capability :Network_Cumulative_Relaxed_Rewards
 
     # The self-expression engines that this node uses.
     # This is a hash of engine objects.
