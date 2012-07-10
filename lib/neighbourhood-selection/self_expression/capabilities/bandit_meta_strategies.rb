@@ -98,7 +98,9 @@ module Bandit_Meta_Strategies
       @strategies = { broadcast: {count: 0, payoff: self.random.rand / 1000000},
                       smooth: {count: 0, payoff: self.random.rand / 1000000},
                       step: {count: 0, payoff: self.random.rand / 1000000},
-                      ucb1: {count: 0, payoff: self.random.rand / 1000000}
+                      ucb1: {count: 0, payoff: self.random.rand / 1000000},
+                      adaptive_pursuit: {count: 0, payoff: self.random.rand / 1000000},
+                      epsilon_greedy: {count: 0, payoff: self.random.rand / 1000000}
                     }
     else
       # Check what we used last time, and update our knowledge based on its
