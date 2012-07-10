@@ -53,7 +53,7 @@ module Bandit_Meta_Strategies
 
 
   # This is a simple example meta-strategy.
-  def bandit_example
+  def meta_bandit_example
 
     # Here is a simple example, which uses the broadcast strategy 50% of the
     # time, and the smooth strategy the other 50% of the time, chosen at random.
@@ -75,7 +75,7 @@ module Bandit_Meta_Strategies
 
 
   # Basic epsilon greedy bandit solving strategy
-  def bandit_epsilon_greedy epsilon=0.1
+  def meta_bandit_epsilon_greedy epsilon=0.1
 
     # We need to keep track of the learnt expected payoff from each arm
     # (strategy), along with the number of times we used it.

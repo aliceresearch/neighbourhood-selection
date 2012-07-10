@@ -54,7 +54,7 @@ module Ensemble_Meta_Strategies
 
 
   # This is a simple example meta-strategy.
-  def ensemble_example
+  def meta_ensemble_example
 
     # Here is a simple example, which uses the broadcast strategy 50% of the
     # time, and the smooth strategy the other 50% of the time, chosen at random.
@@ -76,7 +76,7 @@ module Ensemble_Meta_Strategies
   end
   
 
-  def ensemble_intersect_smooth_step
+  def meta_ensemble_intersect_smooth_step
     
     selected_nodes = smooth & step    
     
@@ -92,7 +92,7 @@ module Ensemble_Meta_Strategies
   end
 
 
-  def ensemble_union_smooth_step
+  def meta_ensemble_union_smooth_step
     
     selected_nodes = smooth | step    
     
@@ -108,7 +108,7 @@ module Ensemble_Meta_Strategies
   end
   
 
-  def ensemble_weighted_sum
+  def meta_ensemble_weighted_sum
     # To do. Right now the result is a union.
     unless @weight_smooth
       @weight_smooth = 0
@@ -132,7 +132,7 @@ module Ensemble_Meta_Strategies
   end
   
 
-  def ensemble_majority_vote
+  def meta_ensemble_majority_vote
 
     #TODO: Fixme
       
