@@ -26,27 +26,34 @@ testexperiment:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: epsilon_greedy
 
-    not-an-ensemble:
+    adaptive_pursuit:
       node_strategies:
-        0: ensemble_example
+        0:
+          strategy: adaptive_pursuit
+
 
 
 # Attempt at some complex scenarios
@@ -60,31 +67,48 @@ complex1:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: epsilon_greedy
 
-    ensemble_intersect_smooth_step:
+    adaptive_pursuit:
       node_strategies:
-        0: ensemble_intersect_smooth_step 
+        0:
+          strategy: adaptive_pursuit
 
-    ensemble_union_smooth_step:
-      node_strategies:
-        0: ensemble_union_smooth_step
+    #meta_bandit_epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
 
 complex2:
   scenario: complex2
@@ -96,32 +120,49 @@ complex2:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: epsilon_greedy
 
-    ensemble_intersect_smooth_step:
+    adaptive_pursuit:
       node_strategies:
-        0: ensemble_intersect_smooth_step 
+        0:
+          strategy: adaptive_pursuit
 
-    ensemble_union_smooth_step:
-      node_strategies:
-        0: ensemble_union_smooth_step
-        
+    #meta_bandit_epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
+
 # Static scenario experiments
 
 broadcastbest:
@@ -129,84 +170,183 @@ broadcastbest:
   num_trials: 30
   results_dir: results/baseline-scenarios/1-broadcast-best
   max_conjoint_utility: 8000
-      
+
   scenario_variants:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: epsilon_greedy
+
+    adaptive_pursuit:
+      node_strategies:
+        0:
+          strategy: adaptive_pursuit
+
+    #meta_bandit_epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
 
 smoothbest:
   scenario: scenario2
   num_trials: 30
   results_dir: results/baseline-scenarios/2-smooth-best
   max_conjoint_utility: 8000
-  
+
   scenario_variants:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: epsilon_greedy
+
+    adaptive_pursuit:
+      node_strategies:
+        0:
+          strategy: adaptive_pursuit
+
+    #meta_bandit_epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
 
 stepbest:
   scenario: scenario3
   num_trials: 30
   results_dir: results/baseline-scenarios/3-step-best
   max_conjoint_utility: 8000
-  
+
   scenario_variants:
 
-    broadcast:
-      node_strategies:
-        0: broadcast
+    #broadcast:
+      #node_strategies:
+        #0:
+          #strategy: broadcast
 
-    smooth:
-      node_strategies:
-        0: smooth
+    #smooth:
+      #node_strategies:
+        #0:
+          #strategy: smooth
 
-    step:
-      node_strategies:
-        0: step
+    #step_0.95/0.001:
+      #node_strategies:
+        #0:
+            #strategy: step
+            #step_epsilon: 0.95
+            #step_eta: 0.001
+
+    #step_0.95/0.01:
+      #node_strategies:
+        #0:
+            #strategy: step
+            #step_epsilon: 0.95
+            #step_eta: 0.01
+
+    #step_0.99/0.001:
+      #node_strategies:
+        #0:
+            #strategy: step
+            #step_epsilon: 0.99
+            #step_eta: 0.001
+
+    #step_0.99/0.01:
+      #node_strategies:
+        #0:
+            #strategy: step
+            #step_epsilon: 0.99
+            #step_eta: 0.01
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+            strategy: ucb1
 
-    epsilon_greedy:
-      node_strategies:
-        0: bandit_epsilon_greedy
+    #epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: epsilon_greedy
+
+    #adaptive_pursuit:
+      #node_strategies:
+        #0:
+          #strategy: adaptive_pursuit
+
+    #meta_bandit_epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
+
 
 
 # Sudden dynamics experiments
@@ -220,24 +360,28 @@ scenario12:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
-                
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: bandit_epsilon_greedy
 
 scenario13:
   scenario: scenario13
@@ -248,23 +392,28 @@ scenario13:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: bandit_epsilon_greedy
 
 scenario21:
   scenario: scenario21
@@ -275,23 +424,28 @@ scenario21:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: bandit_epsilon_greedy
 
 scenario23:
   scenario: scenario23
@@ -303,31 +457,38 @@ scenario23:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
-    
+        0:
+          strategy: step
+
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     ensemble_intersect_smooth_step:
       node_strategies:
-        0: ensemble_intersect_smooth_step 
+        0:
+          strategy: ensemble_intersect_smooth_step
 
-    ensemble_union_smooth_step:
-      node_strategies:
-        0: ensemble_union_smooth_step
+    #ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
 
-    epsilon_greedy:
-      node_strategies:
-        0: bandit_epsilon_greedy
+    #epsilon_greedy:
+      #node_strategies:
+        #0:
+          #strategy: bandit_epsilon_greedy
 
 scenario31:
   scenario: scenario31
@@ -338,23 +499,28 @@ scenario31:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: bandit_epsilon_greedy
 
 scenario32:
   scenario: scenario32
@@ -365,21 +531,26 @@ scenario32:
 
     broadcast:
       node_strategies:
-        0: broadcast
+        0:
+          strategy: broadcast
 
     smooth:
       node_strategies:
-        0: smooth
+        0:
+          strategy: smooth
 
     step:
       node_strategies:
-        0: step
+        0:
+          strategy: step
 
     ucb1:
       node_strategies:
-        0: ucb1
+        0:
+          strategy: ucb1
 
     epsilon_greedy:
       node_strategies:
-        0: bandit_epsilon_greedy
+        0:
+          strategy: bandit_epsilon_greedy
 
