@@ -54,6 +54,20 @@ testexperiment:
         0:
           strategy: adaptive_pursuit
 
+    meta_bandit_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
 
 
 # Attempt at some complex scenarios
