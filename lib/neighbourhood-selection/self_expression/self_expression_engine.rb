@@ -91,9 +91,10 @@ class Self_Expression_Engine
       method(@selection_strategy).call
     rescue => e
       warn "Warning: The neighbourhood selection strategy generated an exception of type #{e.class}."
-      warn "--> #{e}"
       warn "--> The strategy #{@selection_strategy} either did not exist or work properly."
+      warn "--> The message was #{e.backtrace}"
       warn "--> This node will select *no nodes*."
+      warn ""
       Set.new
     end
   end
