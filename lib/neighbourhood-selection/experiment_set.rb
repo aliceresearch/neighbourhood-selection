@@ -46,7 +46,7 @@ class Experiment_Set
       analyser = Experiment_Set_Analyser.new(@datafiles[:conjoint_utilities],
                                      ["factor", "factor", "integer", "numeric"])
 
-      analyser.create_set_stats
+      analyser.create_set_stats "results/experiment-set-conjoint-utilities-stats.txt"
 
     end
 
