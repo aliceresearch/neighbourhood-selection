@@ -75,7 +75,10 @@ module Bandit_Selection_Strategies
   end
 
 
-  def epsilon_greedy epsilon=0.1
+  def epsilon_greedy
+
+    # Default parameters - in case nothing was given in @strategy_parameters
+    bandit_epsilon = (@strategy_parameters[:bandit_epsilon] or 0.01)
 
     # Keep track of the number of times we included each node
     unless @selected_count
@@ -103,7 +106,7 @@ module Bandit_Selection_Strategies
         @selected_count[node.node_id]
 
       # With probability 1-epsilon, we select the best known strategy so far 
-      if self.random.rand > epsilon
+      if self.random.rand > bandit_epsilon
 
         # Assume inaction gives a zero reward:
         if average_node_reward > 0

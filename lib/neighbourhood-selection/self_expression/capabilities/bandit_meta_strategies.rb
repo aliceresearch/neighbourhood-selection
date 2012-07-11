@@ -75,7 +75,10 @@ module Bandit_Meta_Strategies
 
 
   # Basic epsilon greedy bandit solving strategy
-  def meta_bandit_epsilon_greedy epsilon=0.1
+  def meta_bandit_epsilon_greedy
+
+    # Default parameters - in case nothing was given in @strategy_parameters
+    meta_bandit_epsilon = (@strategy_parameters[:meta_bandit_epsilon] or 0.01)
 
     # We need to keep track of the learnt expected payoff from each arm
     # (strategy), along with the number of times we used it.
@@ -120,7 +123,7 @@ module Bandit_Meta_Strategies
     end
 
     # With probability 1-epsilon, we select the best known strategy so far 
-    if self.random.rand > epsilon
+    if self.random.rand > meta_bandit_epsilon
       # This will only return one strategy, even in the event of ties. See the
       # above comment for an explanation of how this is mitigated.
       #
