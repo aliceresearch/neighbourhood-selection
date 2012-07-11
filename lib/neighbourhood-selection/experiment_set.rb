@@ -26,7 +26,7 @@ class Experiment_Set
     # Run each experiment in turn.
     @experiment_list.each do |experiment_name|
       filenames = create_and_run_experiment experiment_name, run_experiments, generate_graphs, generate_graph_titles, generate_stats
-      puts "Experiment #{experiment_name} completed." unless options.noexperiments
+      puts "Experiment #{experiment_name} completed." if run_experiments
       puts "The following data sets are available for experiment #{experiment_name}:"
       filenames.each { |name, file| puts "--> #{name}: #{file}" }
     end
