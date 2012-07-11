@@ -8,7 +8,7 @@ class Experiment
 
   # Create a new Experiment object.
   #
-  def initialize experiment_name, config_file="./config/experiment.yml"
+  def initialize experiment_name, config_file
 
     # Load experimental setup configuration
     @CONFIG = YAML.load_file(config_file)[experiment_name]
@@ -199,6 +199,10 @@ class Experiment
 
     end
 
+    # Return a hash of the filenames we put data in.
+    { conjoint_utilities: @conjoint_utilities_filename,
+      taus: @taus_filename,
+      node_utilities: @node_utilities_filename }
   end
 
 

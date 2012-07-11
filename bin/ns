@@ -36,29 +36,17 @@ command :run do |c|
       exit
     end
 
-    # Run each experiment in turn.
-    args.each do |experiment_name|
-      create_and_run_experiment experiment_name, options
-    end
+    # Create a new set of experiments to run. args contains a list of the
+    # experiment names to run, as specified in the experiment.yml config file.
+    experiment_set = Experiment_Set.new args
+
+    # Run whatever is needed for each experiment, as specified by the options.
+    # Experiment_set defaults to running everything, unless passed in here to
+    # the contrary.
+    experiment_set.run !options.noexperiments, !options.nographs, !options.nographtitles, !options.nostats
 
   end
 
 end
 
 
-# Actually create an experiment object, and run it.
-def create_and_run_experiment experiment_name, options
-
-    # If we've been passed a --config <filename>, then use that instead of
-    # 'config/experiment.yml'
-    #
-    # Create the simulation itself:
-    if options.config
-      experiment = Experiment.new experiment_name, options.file
-    else
-      experiment = Experiment.new experiment_name
-    end
-
-    # Run the experiment using the config given.
-    experiment.run !options.noexperiments, !options.nographs, !options.nographtitles, !options.nostats
-end
