@@ -9,7 +9,7 @@ class Experiment_Analyser
     # So we can see this in other methods
     @dataset_name = datafile
 
-    # Check we're not trying to plot nothing
+    # Check we're not trying to analyse nothing
     unless File.exists? datafile
       R.quit
       raise "Data file does not exist."
@@ -117,6 +117,7 @@ class Experiment_Analyser
     # Create a data frame with just the final values in it
     # (i.e. throw out all timesteps but the last one:
     @r.eval "subset(data, subset=(Timestep>=max(Timestep))) -> data.final"
+
 
     # Using this new slimmed down data frame, calculate the mean and standard
     # deviations for each variant.
