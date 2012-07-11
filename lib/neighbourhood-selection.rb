@@ -1,1 +1,1 @@
-require 'neighbourhood-selection/experiment'
+require 'neighbourhood-selection/experiment_set'
