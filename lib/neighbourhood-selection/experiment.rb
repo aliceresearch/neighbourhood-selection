@@ -57,12 +57,6 @@ class Experiment
     @node_utilities_filename = "#{@filename_prefix}.node_utilities"
     @conjoint_utilities_filename = "#{@filename_prefix}.conjoint_utilities"
 
-    if File.exists? @taus_filename or
-        File.exists? @node_utilities_filename or
-        File.exists? @conjoint_utilities_filename
-      warn "Warning: I *am* overwriting previous data."
-    end
-
     # What file should the simulator use for its config?
     @scenario_config_file = (@CONFIG[:scenario_config_file] or "./config/scenarios.yml")
 
@@ -132,6 +126,13 @@ class Experiment
     y_max = @CONFIG[:max_conjoint_utility]
 
     if run_experiments
+
+      # Warn if overwriting data.
+      if File.exists? @taus_filename or
+          File.exists? @node_utilities_filename or
+          File.exists? @conjoint_utilities_filename
+        warn "Warning: I *am* overwriting previous data."
+      end
 
       # Open files
       taus_file = File.open(@taus_filename, 'w')
@@ -210,7 +211,7 @@ class Experiment
   # Some useful warnings are also included.
   def create_results_dir
     if File.directory?(@results_dir)
-      warn "Warning: Results directory already exists. I may overwrite previous data and figures."
+      warn "Warning: Results directory already exists. I may overwrite previous data, statistics or figures."
     else
       begin
         FileUtils.mkpath(@results_dir)
