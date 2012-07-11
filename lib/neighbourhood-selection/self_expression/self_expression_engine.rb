@@ -66,7 +66,7 @@ class Self_Expression_Engine
 
     # Make a deep local copy of the strategy parameters, to force the meta layer
     # to notify us when it has changed them.
-    @strategy_parameters = Marshal.load(Marshal.dump(@strategy_parameters))
+    @strategy_parameters = Marshal.load(Marshal.dump(new_strategy))
 
     # Delete the name of the strategy itself, since we already used that to
     # decide on the method to call.
