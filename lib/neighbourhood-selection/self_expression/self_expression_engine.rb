@@ -61,12 +61,8 @@ class Self_Expression_Engine
     # TODO: Some error checking here - check the method exists.
     @selection_strategy = new_strategy[:strategy]
 
-    # TODO: Isolate these into the capabilities' container objects; see TODO
-    # above. This will permit parameter storing between strategy uses.
-    #
-    # Don't think this needs to be a deep copy, since we shouldn't be changing
-    # it in the self-expression engine anyway.
-    @strategy_parameters = new_strategy
+    # TODO: Isolate these capabilities into container objects; see TODO above.
+    # This will permit parameter storing between strategy uses.
 
     # Make a deep local copy of the strategy parameters, to force the meta layer
     # to notify us when it has changed them.
