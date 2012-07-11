@@ -1,4 +1,5 @@
 require "neighbourhood-selection/experiment"
+require "neighbourhood-selection/experiment_set_analyser"
 
 class Experiment_Set
 
@@ -12,6 +13,7 @@ class Experiment_Set
     # A list of the names of the experiments to run
     @experiment_list = experiments
     @config_file = config_file
+    @datafiles = {}
 
     # Check config file exists.
     unless File.exists? config_file
@@ -28,7 +30,24 @@ class Experiment_Set
       filenames = create_and_run_experiment experiment_name, run_experiments, generate_graphs, generate_graph_titles, generate_stats
       puts "Experiment #{experiment_name} completed." if run_experiments
       puts "The following data sets are available for experiment #{experiment_name}:"
-      filenames.each { |name, file| puts "--> #{name}: #{file}" }
+
+      filenames.each do |name, file|
+        puts "--> #{name}: #{file}"
+        @datafiles[name.to_sym] = Array.new unless @datafiles[name]
+        @datafiles[name.to_sym] << file
+      end
+
+    end
+
+    # Create some stats for the whole experiment set, if requested
+    if generate_stats
+
+      # Create an analyser object for this dataset
+      analyser = Experiment_Set_Analyser.new(@datafiles[:conjoint_utilities],
+                                     ["factor", "factor", "integer", "numeric"])
+
+      analyser.create_set_stats
+
     end
 
   end
@@ -52,9 +71,6 @@ class Experiment_Set
   end
 
 
-  #def calculate_average_stats
-
-  #end
 
 end
 
