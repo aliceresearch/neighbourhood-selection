@@ -73,7 +73,7 @@ testexperiment:
 # Attempt at some complex scenarios
 complex1:
   scenario: complex1
-  num_trials: 30
+  num_trials: 100
   debug: false
   results_dir: results/dynamics-sudden/complex1
 
@@ -126,7 +126,7 @@ complex1:
 
 complex2:
   scenario: complex2
-  num_trials: 30
+  num_trials: 100
   debug: false
   results_dir: results/dynamics-sudden/complex2
 
@@ -181,7 +181,7 @@ complex2:
 
 broadcastbest:
   scenario: scenario1
-  num_trials: 30
+  num_trials: 100
   results_dir: results/baseline-scenarios/1-broadcast-best
   max_conjoint_utility: 8000
 
@@ -234,7 +234,7 @@ broadcastbest:
 
 smoothbest:
   scenario: scenario2
-  num_trials: 30
+  num_trials: 100
   results_dir: results/baseline-scenarios/2-smooth-best
   max_conjoint_utility: 8000
 
@@ -287,7 +287,7 @@ smoothbest:
 
 stepbest:
   scenario: scenario3
-  num_trials: 30
+  num_trials: 100
   results_dir: results/baseline-scenarios/3-step-best
   max_conjoint_utility: 8000
 
@@ -366,7 +366,7 @@ stepbest:
 
 scenario12:
   scenario: scenario12
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario12
 
   scenario_variants:
@@ -418,7 +418,7 @@ scenario12:
 
 scenario13:
   scenario: scenario13
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario13
 
   scenario_variants:
@@ -470,7 +470,7 @@ scenario13:
 
 scenario21:
   scenario: scenario21
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario21
 
   scenario_variants:
@@ -523,7 +523,7 @@ scenario21:
 scenario23:
   scenario: scenario23
   results_dir: results/dynamic-scenarios/23-smooth-step
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario23
 
   scenario_variants:
@@ -575,7 +575,7 @@ scenario23:
 
 scenario31:
   scenario: scenario31
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario31
 
   scenario_variants:
@@ -627,7 +627,7 @@ scenario31:
 
 scenario32:
   scenario: scenario32
-  num_trials: 30
+  num_trials: 100
   results_dir: results/dynamics-sudden/scenario32
 
   scenario_variants:
