@@ -80,7 +80,7 @@ class Gamma
       # Uses ALGORITHM GS of Statistical Computing - Kennedy & Gentle
       while 1
         u = @random.rand
-        b = (Math.e + alpha)/Math.e
+        b = (Math::E + alpha)/Math::E
         p = b*u
 
         if p <= 1.0
