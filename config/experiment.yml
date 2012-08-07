@@ -232,6 +232,59 @@ complex3:
           #strategy: ensemble_union_smooth_step
 
 
+complex4:
+  scenario: complex4
+  num_trials: 100
+  debug: false
+  results_dir: results/dynamics-sudden/complex4
+
+  scenario_variants:
+
+    broadcast:
+      node_strategies:
+        0:
+          strategy: broadcast
+
+    smooth:
+      node_strategies:
+        0:
+          strategy: smooth
+
+    step:
+      node_strategies:
+        0:
+          strategy: step
+
+    ucb1:
+      node_strategies:
+        0:
+          strategy: ucb1
+
+    epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: epsilon_greedy
+
+    adaptive_pursuit:
+      node_strategies:
+        0:
+          strategy: adaptive_pursuit
+
+    meta_bandit_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_epsilon_greedy
+
+    #meta_ensemble_intersect_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_intersect_smooth_step
+
+    #meta_ensemble_union_smooth_step:
+      #node_strategies:
+        #0:
+          #strategy: ensemble_union_smooth_step
+
 
 # Static scenario experiments
 

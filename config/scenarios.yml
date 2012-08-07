@@ -873,3 +873,155 @@ complex3:
       action: remove
 
   debug: false
+
+
+complex4:
+
+  numnodes: 21
+
+  node_parameters:
+    0:
+      1: { p: 0.1, alpha: 1, theta: 8.0 }
+      2: { p: 0.6, alpha: 1, theta: 2.0 }
+      3: { p: 0.8, alpha: 2, theta: 1.0 }
+      4: { p: 0.2, alpha: 1, theta: 1.0 }
+      5: { p: 1, alpha: 2, theta: 1.0 }
+      6: { p: 0.2, alpha: 1, theta: 2.0 }
+      7: { p: 0.1, alpha: 3, theta: 1.7 }
+      8: { p: 0.4, alpha: 2, theta: 0.1 }
+      9: { p: 0.5, alpha: 1, theta: 0.5 }
+      10: { p: 0.9, alpha: 3, theta: 2.0 }
+      11: { p: 0.2, alpha: 5, theta: 1.1 }
+      12: { p: 0.1, alpha: 9, theta: 1.9 }
+      13: { p: 0.4, alpha: 4, theta: 1.0 }
+      14: { p: 0.5, alpha: 1, theta: 1.2 }
+      15: { p: 0.8, alpha: 2, theta: 2.1 }
+      16: { p: 0.1, alpha: 1, theta: 1.0 }
+      17: { p: 0.7, alpha: 1, theta: 1.0 }
+      18: { p: 0.5, alpha: 1, theta: 0.2 }
+      19: { p: 0.8, alpha: 1, theta: 1.1 }
+      20: { p: 0.7, alpha: 1, theta: 3.1 }
+    1:
+      connected: false
+    3:
+      connected: false
+    8:
+      connected: false
+    11:
+      connected: false
+    12:
+      connected: false
+    17:
+      connected: false
+
+  events:
+    one:
+      time: 500
+      node: 1
+      action: add
+    two:
+      time: 1000
+      node: 11
+      action: add
+    three:
+      time: 1200
+      node: 3
+      action: add
+    three-a:
+      time: 1200
+      node: 13
+      action: remove
+    three-b:
+      time: 1200
+      node: 5
+      action: remove
+    three-c:
+      time: 1200
+      node: 2
+      action: remove
+    four:
+      time: 3000
+      node: 8
+      action: add
+    five:
+      time: 3300
+      node: 9
+      action: remove
+    six:
+      time: 3500
+      node: 10
+      action: remove
+    seven:
+      time: 3600
+      node: 18
+      action: remove
+    eight:
+      time: 4000
+      node: 15
+      action: remove
+    nine:
+      time: 3400
+      node: 16
+      action: remove
+    ten:
+      time: 4100
+      node: 7
+      action: remove
+    eleven:
+      time: 5200
+      node: 14
+      action: remove
+    twelve:
+      time: 6000
+      node: 13
+      action: add
+    thirteen:
+      time: 6400
+      node: 17
+      action: remove
+    fourteen:
+      time: 7000
+      node: 8
+      action: remove
+    fifteen:
+      time: 7100
+      node: 20
+      action: remove
+    sixteen:
+      time: 7500
+      node: 9
+      action: add
+    seventeen:
+      time: 7800
+      node: 10
+      action: add
+    eighteen:
+      time: 7400
+      node: 13
+      action: remove
+    nineteen:
+      time: 7500
+      node: 17
+      action: add
+    twenty:
+      time: 7800
+      node: 1 
+      action: remove
+    twenty-one:
+      time: 7900
+      node: 9
+      action: remove
+    twenty-two:
+      time: 8500
+      node: 2
+      action: add
+    twenty-three:
+      time: 8900
+      node: 10 
+      action: remove
+    twenty-four:
+      time: 9200
+      node: 1
+      action: add
+
+  debug: false
