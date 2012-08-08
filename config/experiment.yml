@@ -24,20 +24,22 @@ testexperiment:
   #
   scenario_variants:
 
-    broadcast:
-      node_strategies:
-        0:
-          strategy: broadcast
+    # This performs so poorly, it crowds graphs
+    #broadcast:
+      #node_strategies:
+        #0:
+          #strategy: broadcast
 
     smooth:
       node_strategies:
         0:
           strategy: smooth
 
-    step:
-      node_strategies:
-        0:
-          strategy: step
+    # This performs so poorly, it crowds graphs
+    #step:
+      #node_strategies:
+        #0:
+          #strategy: step
 
     ucb1:
       node_strategies:
@@ -49,6 +51,11 @@ testexperiment:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -58,6 +65,16 @@ testexperiment:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
+
+    meta_weighted_ensemble_majority_vote:
+      node_strategies:
+        0:
+          strategy: meta_weighted_ensemble_majority_vote
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -104,6 +121,11 @@ complex1:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -113,6 +135,11 @@ complex1:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -157,6 +184,11 @@ complex2:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -166,6 +198,11 @@ complex2:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -211,6 +248,11 @@ complex3:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -220,6 +262,11 @@ complex3:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -265,6 +312,11 @@ complex4:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -274,6 +326,11 @@ complex4:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -321,6 +378,11 @@ broadcastbest:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -330,6 +392,11 @@ broadcastbest:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -374,6 +441,11 @@ smoothbest:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -383,6 +455,11 @@ smoothbest:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -449,6 +526,11 @@ stepbest:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -458,6 +540,11 @@ stepbest:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -505,6 +592,11 @@ scenario12:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -514,6 +606,11 @@ scenario12:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -557,6 +654,11 @@ scenario13:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -566,6 +668,11 @@ scenario13:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -609,6 +716,11 @@ scenario21:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -618,6 +730,11 @@ scenario21:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -662,6 +779,11 @@ scenario23:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -671,6 +793,11 @@ scenario23:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -714,6 +841,11 @@ scenario31:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -723,6 +855,11 @@ scenario31:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
@@ -766,6 +903,11 @@ scenario32:
         0:
           strategy: epsilon_greedy
 
+    relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: relaxed_epsilon_greedy
+
     adaptive_pursuit:
       node_strategies:
         0:
@@ -775,6 +917,11 @@ scenario32:
       node_strategies:
         0:
           strategy: meta_bandit_epsilon_greedy
+
+    meta_bandit_relaxed_epsilon_greedy:
+      node_strategies:
+        0:
+          strategy: meta_bandit_relaxed_epsilon_greedy
 
     #meta_ensemble_intersect_smooth_step:
       #node_strategies:
