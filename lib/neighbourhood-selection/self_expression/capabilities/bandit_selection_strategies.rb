@@ -146,6 +146,61 @@ module Bandit_Selection_Strategies
   end
 
 
+  def relaxed_epsilon_greedy
+
+    # Default parameters - in case nothing was given in @strategy_parameters
+    relaxed_bandit_epsilon = (@strategy_parameters[:relaxed_bandit_epsilon] or 0.01)
+
+    ## Keep track of the number of times we included each node
+    #unless @selected_count
+      #@selected_count = Hash.new(0)
+    #end
+
+    selected_nodes = Set.new
+
+    # Compare each node as an arm against a phantom arm of inaction.
+    self.awareness.retrieve(:possible_nodes).each do |node|
+
+      # With probability 1-epsilon, we select the best known strategy so far 
+      if self.random.rand > relaxed_bandit_epsilon
+
+        # Assume inaction gives a zero reward:
+        if self.awareness.retrieve(:cumulative_relaxed_rewards)[node.node_id] >= 0
+          selected_nodes.add node
+          if debug?
+            puts " -- CHOSE BEST STRATEGY: SELECTED"
+          end
+        else
+          if debug?
+            puts " -- CHOSE BEST STRATEGY: NOT SELECTED"
+          end
+        end
+
+      else
+
+        # Select a strategy at random from the list
+        if self.random.rand > 0.5
+          selected_nodes.add node
+          if debug?
+            puts " -- SELECTED AT RANDOM"
+          end
+        else
+          if debug?
+            puts " -- NOT SELECTED AT RANDOM"
+          end
+        end
+
+      end
+
+    end
+
+    # Return our final set
+    selected_nodes
+
+  end
+
+
+
   #def probability_matching p_min=0.01
 
     #selected_nodes = Set.new

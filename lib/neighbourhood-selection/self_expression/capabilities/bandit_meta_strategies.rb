@@ -103,7 +103,8 @@ module Bandit_Meta_Strategies
                       step: {count: 0, payoff: self.random.rand / 1000000},
                       ucb1: {count: 0, payoff: self.random.rand / 1000000},
                       adaptive_pursuit: {count: 0, payoff: self.random.rand / 1000000},
-                      epsilon_greedy: {count: 0, payoff: self.random.rand / 1000000}
+                      epsilon_greedy: {count: 0, payoff: self.random.rand / 1000000},
+                      relaxed_epsilon_greedy: {count: 0, payoff: self.random.rand / 1000000}
                     }
     else
       # Check what we used last time, and update our knowledge based on its
@@ -153,4 +154,80 @@ module Bandit_Meta_Strategies
     selected_nodes
   end
 
+
+  # Basic epsilon greedy bandit solving strategy
+  def meta_bandit_relaxed_epsilon_greedy
+
+    # Default parameters - in case nothing was given in @strategy_parameters
+    meta_bandit_relaxed_epsilon = (@strategy_parameters[:meta_bandit_relaxed_epsilon] or 0.01)
+    alpha = (@strategy_parameters[:meta_bandit_relaxed_epsilon_alpha] or 0.01)
+
+    # We need to keep track of the relaxed payoff from each arm.
+    #
+    # To simplify the implementation, when finding the best known strategy
+    # below, we break any ties by just selecting the first strategy in the tie
+    # (this is max_by's default behaviour). Therefore, as suggested in Sutton
+    # and Barto's book for standard epsilon greedy, we initialise the relaxed
+    # payoffs to very small random numbers (instead of zero) to avoid an initial
+    # bias based on the ordering of the strategies in this hash.
+    #
+    unless @strategies
+      # Initialise, when we are starting up and have no information.
+      @strategies = { broadcast: {relaxed_payoff: self.random.rand / 1000000},
+                      smooth: {relaxed_payoff: self.random.rand / 1000000},
+                      step: {relaxed_payoff: self.random.rand / 1000000},
+                      ucb1: {relaxed_payoff: self.random.rand / 1000000},
+                      adaptive_pursuit: {relaxed_payoff: self.random.rand / 1000000},
+                      epsilon_greedy: {relaxed_payoff: self.random.rand / 1000000},
+                      relaxed_epsilon_greedy: {relaxed_payoff: self.random.rand / 1000000}
+                    }
+    else
+      # Check what we used last time, and update our knowledge based on its
+      # performance.
+      unless @last_used_strategy
+        raise "Error: Bandit strategy had no information on previously chosen strategy."
+      else
+
+        @strategies[@last_used_strategy][:relaxed_payoff] =
+          (1 - alpha) * @strategies[@last_used_strategy][:relaxed_payoff] + 
+          alpha * self.awareness.retrieve(:last_conjoint_utility)
+
+        if debug?
+          puts "Added utility of #{self.awareness.retrieve(:last_conjoint_utility)} to #{@last_used_strategy}"
+        end
+
+      end
+
+    end
+
+    # With probability 1-epsilon, we select the best known strategy so far 
+    if self.random.rand > meta_bandit_relaxed_epsilon
+      # This will only return one strategy, even in the event of ties. See the
+      # above comment for an explanation of how this is mitigated.
+      #
+      # max_by returns an array of the form [key, value], so we take [0] to get
+      # just a symbol for the selected strategy.
+      selected_strategy = @strategies.max_by { |k, v| v[:relaxed_payoff] }[0]
+    else
+      # Select a strategy at random from the list
+      selected_strategy = @strategies.keys.sample(random: self.random)
+    end
+
+    # Get the set of selected nodes from the selected strategy.
+    selected_nodes = self.method(selected_strategy).call
+
+    # Record that we used this strategy last.
+    @last_used_strategy = selected_strategy
+
+
+    # Bit of debugging output - only output for one node, which is the one we
+    # are typically interested in.
+    if self.debug? and @node_id == 0
+      puts "Used #{selected_strategy} strategy."
+      print_selected_nodes 0, selected_nodes
+    end
+
+    # Return the set of selected nodes
+    selected_nodes
+  end
 end
