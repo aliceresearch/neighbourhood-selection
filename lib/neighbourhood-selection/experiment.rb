@@ -131,16 +131,26 @@ class Experiment
       if File.exists? @taus_filename or
           File.exists? @node_utilities_filename or
           File.exists? @conjoint_utilities_filename
-        warn "Warning: I *am* overwriting previous data."
+        warn "Warning: If you reduced the variant config, I am removing unasked-for data."
+        # Clean up data in files not requested in the config
+        clean_data_file @taus_filename, @CONFIG[:scenario_variants]
+        clean_data_file @node_utilities_filename, @CONFIG[:scenario_variants]
+        clean_data_file @conjoint_utilities_filename, @CONFIG[:scenario_variants]
       end
 
-      # Open files
-      taus_file = File.open(@taus_filename, 'w')
-      node_utilities_file = File.open(@node_utilities_filename, 'w')
-      conjoint_utilities_file = File.open(@conjoint_utilities_filename, 'w')
-
-
       @CONFIG[:scenario_variants].each do |variant_name, variant_config|
+
+        # Check that this data set doesn't already exist, before running the
+        # experiment. I.e. don't overwrite data.
+        if data_file_contains @conjoint_utilities_filename, variant_name
+          puts "Skipping variant #{variant_name} as its data is already present."
+          next
+        end
+
+        # Open files
+        taus_file = File.open(@taus_filename, 'a')
+        node_utilities_file = File.open(@node_utilities_filename, 'a')
+        conjoint_utilities_file = File.open(@conjoint_utilities_filename, 'a')
 
         # Run the experiment itself
         run_variant variant_name, variant_config, taus_file, node_utilities_file, conjoint_utilities_file
@@ -149,12 +159,13 @@ class Experiment
           puts "Experimental variant #{variant_name} finished."
         end
 
+        # Close files
+        taus_file.close
+        node_utilities_file.close
+        conjoint_utilities_file.close
+
       end
 
-      # Close files
-      taus_file.close
-      node_utilities_file.close
-      conjoint_utilities_file.close
 
     end
 
@@ -224,6 +235,56 @@ class Experiment
         puts "Created results directory: #{@results_dir}."
       end
     end
+  end
+
+
+  # Remove all lines from the data file which are not specified as variants in
+  # variants_to_keep
+  def clean_data_file filename, variants_to_keep = Hash.new
+
+    # Collect all results in an array
+    line_arr = File.readlines(filename)
+    new_line_arr = Array.new
+
+    # Process array, deleting unasked for data points
+    line_arr.each_index do |i|
+
+      # Ignore header line, just copy across
+      if i == 0
+        new_line_arr[0] = line_arr[0]
+      else
+        if variants_to_keep.keys.include? line_arr[i].split[0].to_sym
+          new_line_arr << line_arr[i]
+        end
+      end
+
+    end
+
+    File.open(filename, "w") do |f|
+      new_line_arr.each{|line| f.puts(line)}
+    end
+
+  end
+
+
+  # Does this data file already contain this variant's data?
+  def data_file_contains filename, variant_name
+
+    unless File.exists? filename
+      return false
+    end
+
+    # Collect all results in an array
+    line_arr = File.readlines(filename)
+
+    found = false
+    line_arr.each do |line|
+      if line.split[0].to_sym == variant_name
+        found = true
+      end
+    end
+
+    found
   end
 
 
