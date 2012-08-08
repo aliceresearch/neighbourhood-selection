@@ -136,9 +136,9 @@ module Ensemble_Meta_Strategies
     selected_nodes = Set.new
     vote_count = Hash.new(0)   # Create an empty hash, with default value for any key 0.
 
-    broadcast_option = self.method(boradcast).call
-    smooth_option = self.method(smooth).call
-    step_option = self.method(step).call
+    broadcast_option = self.method(:broadcast).call
+    smooth_option = self.method(:smooth).call
+    step_option = self.method(:step).call
     
     broadcast_option.each {|n| vote_count[n.node_id] = vote_count[n.node_id] + 1 }
     smooth_option.each {|n| vote_count[n.node_id] = vote_count[n.node_id] + 1 }
@@ -234,9 +234,9 @@ module Ensemble_Meta_Strategies
     end
 
     # Get the set of selected nodes from the selected strategy.
-    broadcast_option = self.method(boradcast).call
-    smooth_option = self.method(smooth).call
-    step_option = self.method(step).call
+    broadcast_option = self.method(:broadcast).call
+    smooth_option = self.method(:smooth).call
+    step_option = self.method(:step).call
 
     selected_nodes = Set.new
     vote_count = Hash.new(0)   # Create an empty hash, with default value for any key 0.
