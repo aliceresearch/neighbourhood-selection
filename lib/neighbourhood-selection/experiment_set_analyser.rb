@@ -44,10 +44,17 @@ class Experiment_Set_Analyser
     puts "Got the following data files:"
     p @datafiles
 
-    # Create data frames with just the final values in it
-    # (i.e. throw out all timesteps but the last one:
+    # Pre-process each datafile, to get what we need:
     @datafiles.each_with_index do |datafile, i|
-      @r.eval "subset(data.#{i}, subset=(Timestep>=max(Timestep))) -> data.#{i}.final"
+      # Create data frames with just the final values in it
+      # (i.e. throw out all timesteps but the last one:
+      @r.eval "subset(data.#{i}, subset=(Timestep>=max(Timestep))) -> data.#{i}.final.unnormalised"
+
+      # Normalise each data set by its best known value, to make them comparable
+      # across scenarios with different maxima.
+      @r.eval "max(data.#{i}.final.unnormalised$Utility) -> maximum"
+      @r.eval "min(data.#{i}.final.unnormalised$Utility) -> minimum"
+      @r.eval "with(data.#{i}.final.unnormalised, data.frame(Variant=Variant, Trial=Trial, Utility=(Utility-minimum)/(maximum-minimum))) -> data.#{i}.final"
     end
 
     # Concatenate data sets from all experiments (scenarios) into data.final
